@@ -29,7 +29,7 @@ function Register() {
       <div className="relative z-10 w-full max-w-md">
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-lg p-8 flex flex-col gap-4"
+          className="bg-(--background) rounded-xl shadow-lg p-8 flex flex-col gap-4"
         >
           <h2 className="text-3xl font-bold text-center">Create Account</h2>
 
@@ -110,7 +110,7 @@ function Register() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition"
+            className="w-full py-3 bg-orange-500 text--(primary-text) font-semibold rounded-lg hover:bg-orange-600 transition"
           >
             Register
           </button>
