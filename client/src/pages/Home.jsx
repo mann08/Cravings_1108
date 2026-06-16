@@ -51,26 +51,27 @@ function Home() {
           <div className="flex justify-center gap-4 mb-8 flex-wrap">
             <Link
               to="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition"
+              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
             >
               Sign Up
             </Link>
 
             <Link
               to="/login"
-              className="bg-white text-gray-900 hover:bg-gray-200 font-semibold px-8 py-3 rounded-lg transition"
+              className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
             >
               Order Now
             </Link>
           </div>
 
-          <div className="max-w-3xl mx-auto bg-white rounded-xl flex items-center px-4 py-3 shadow-xl">
+          <div className="max-w-3xl mx-auto bg-white rounded-xl flex items-center px-4 py-3 shadow-xl hover:shadow-2xl transition-shadow">
             <span className="text-gray-500 text-xl mr-3">🔍</span>
 
             <input
               type="text"
               placeholder="Search restaurants or dishes..."
-              className="w-full outline-none text-gray-700"
+              className="w-full outline-none text-gray-700 placeholder-gray-400"
+              aria-label="Search restaurants or dishes"
             />
           </div>
         </div>
@@ -108,7 +109,7 @@ function Home() {
 
                 <p className="text-gray-600">{restaurant.cuisine}</p>
 
-                <button className="w-full mt-5 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition">
+                <button className="w-full mt-5 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium">
                   Explore Menu
                 </button>
               </div>
@@ -187,11 +188,11 @@ function Home() {
           </p>
 
           <div className="flex justify-center gap-4 flex-wrap">
-            <button className="bg-black text-white px-8 py-3 rounded-lg">
+            <button className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-900 transition-colors duration-200 font-medium">
               Google Play
             </button>
 
-            <button className="bg-black text-white px-8 py-3 rounded-lg">
+            <button className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-900 transition-colors duration-200 font-medium">
               App Store
             </button>
           </div>
@@ -205,7 +206,7 @@ function Home() {
           Grow your business with Cravings and reach thousands of customers.
         </p>
 
-        <button className="bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
+        <button className="bg-white text-orange-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200\">
           Partner With Us
         </button>
       </section>
