@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
@@ -7,6 +8,8 @@ import rajDarbar from "../images/Rajdarabr.webp";
 import countrySide from "../images/country side coulture.webp";
 
 function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const restaurants = [
     {
       name: "Under The Mango Tree",
@@ -27,6 +30,18 @@ function Home() {
       cuisine: "Indian",
     },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      searchQuery,
+      page: "home",
+      action: "search",
+    };
+
+    console.log("Home payload ready for backend:", payload);
+  };
 
   return (
     <div className="bg-gray-50">
@@ -64,16 +79,21 @@ function Home() {
             </Link>
           </div>
 
-          <div className="max-w-3xl mx-auto bg-white rounded-xl flex items-center px-4 py-3 shadow-xl hover:shadow-2xl transition-shadow">
+          <form
+            onSubmit={handleSearch}
+            className="max-w-3xl mx-auto bg-white rounded-xl flex items-center px-4 py-3 shadow-xl hover:shadow-2xl transition-shadow"
+          >
             <span className="text-gray-500 text-xl mr-3">🔍</span>
 
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search restaurants or dishes..."
               className="w-full outline-none text-gray-700 placeholder-gray-400"
               aria-label="Search restaurants or dishes"
             />
-          </div>
+          </form>
         </div>
       </section>
 

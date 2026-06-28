@@ -12,7 +12,15 @@ function Header() {
         />
       </Link>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-wrap justify-end">
+        <Link to="/" className="text-white font-medium hover:text-orange-100 transition-colors">
+          Home
+        </Link>
+
+        <Link to="/contact" className="text-white font-medium hover:text-orange-100 transition-colors">
+          Contact Us
+        </Link>
+
         <Link to="/login" className="text-white font-medium hover:text-orange-100 transition-colors">
           Login
         </Link>

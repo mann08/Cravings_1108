@@ -9,8 +9,14 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("userName :", userName);
-    console.log("password :", password);
+    const payload = {
+      email: userName,
+      password,
+      page: "login",
+      action: "sign_in",
+    };
+
+    console.log("Login payload ready for backend:", payload);
   };
 
   return (

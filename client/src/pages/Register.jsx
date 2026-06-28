@@ -6,17 +6,29 @@ function Register() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [gender, setGender] = useState("male");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [dob, setDob] = useState("");
+  const [role, setRole] = useState("customer");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("fullName :", fullName);
-    console.log("email :", email);
-    console.log("phoneNumber :", phoneNumber);
-    console.log("password :", password);
-    console.log("confirmPassword :", confirmPassword);
+    const payload = {
+      role,
+      fullName,
+      email,
+      phone: phoneNumber,
+      gender,
+      password,
+      "confirm password": confirmPassword,
+      dob,
+      page: "register",
+      action: "sign_up",
+    };
+
+    console.log("Register payload ready for backend:", payload);
   };
 
   return (
@@ -37,26 +49,7 @@ function Register() {
             Join us as a Customer, Restaurant, or Rider
           </p>
 
-          <div>
-            <label className="block font-medium mb-2">Register as:</label>
-
-            <div className="flex flex-wrap gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="role" defaultChecked />
-                <span>Customer</span>
-              </label>
-
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="role" />
-                <span>Restaurant</span>
-              </label>
-
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="role" />
-                <span>Rider</span>
-              </label>
-            </div>
-          </div>
+         
 
           <input
             type="text"
@@ -81,6 +74,27 @@ function Register() {
             placeholder="Enter your phone number"
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
+
+          <div>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+           >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
 
           <input
             type="password"
