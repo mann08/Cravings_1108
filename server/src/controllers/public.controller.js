@@ -19,9 +19,7 @@ export const ContactUsForm = async (req, res, next) => {
     });
 
     return res.status(201).json({
-      success: true,
       message: "Contact form submitted successfully",
-      data: contact,
     });
   } catch (error) {
     console.log(error.message);
