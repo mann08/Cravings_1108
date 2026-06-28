@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
+import api from "../config/api.config";
 
 function Register() {
   const [fullName, setFullName] = useState("");
@@ -12,7 +13,7 @@ function Register() {
   const [dob, setDob] = useState("");
   const [role, setRole] = useState("customer");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
@@ -28,7 +29,12 @@ function Register() {
       action: "sign_up",
     };
 
-    console.log("Register payload ready for backend:", payload);
+    try {
+      const res = await api.post("/auth/register", payload);
+      alert(res.data.message);
+    } catch (error) {
+      console.log(res?.data?.message || error.message);
+    }
   };
 
   return (
@@ -48,8 +54,6 @@ function Register() {
           <p className="text-center text-gray-500">
             Join us as a Customer, Restaurant, or Rider
           </p>
-
-         
 
           <input
             type="text"
@@ -80,7 +84,7 @@ function Register() {
               value={gender}
               onChange={(e) => setGender(e.target.value)}
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-           >
+            >
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
