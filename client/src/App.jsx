@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Contact_Us from "./pages/Contact_Us";
+import { Toaster } from "react-hot-toast";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -25,6 +26,8 @@ function App() {
         </main>
 
         <Footer />
+
+        <Toaster position="top-center" />
       </div>
     </BrowserRouter>
   );

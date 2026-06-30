@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import contactImage from "../images/contactPage.jpg";
+import api from "../config/api.config";
 
 const Contact_Us = () => {
   const [formData, setFormData] = useState({
@@ -15,16 +16,10 @@ const Contact_Us = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formData,
-      page: "contact",
-      action: "contact_form",
-    };
-
-    console.log("Contact payload ready for backend:", payload);
+    
   };
 
   return (
