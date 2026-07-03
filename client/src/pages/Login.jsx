@@ -1,28 +1,30 @@
 import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const { setUser, setIsLogin, isLogin } = useAuth();
+  const { setUser, setIsLogin } = useAuth();
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-  const [validateError, setValidateError] = useState();
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
 
-    setLoginData((prevData) => ({ ...prevData, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setLoginData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Loging data submitted:", loginData);
 
     const payload = {
       email: loginData.email.toLowerCase(),
@@ -35,13 +37,14 @@ function Login() {
       toast.success(res.data.message);
 
       sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+
       setUser(res.data.data);
-      // setIsLogin(true);
+      setIsLogin(true);
+
       navigate("/user/dashboard");
     } catch (error) {
       toast.error(
-        error.response.status + "|" + error.response?.data?.message ||
-          error.message,
+        error.response?.data?.message || error.message || "Login Failed",
       );
     }
   };
@@ -64,24 +67,28 @@ function Login() {
             Login to your Craving account
           </p>
 
+          {/* Email */}
           <label className="font-semibold">Email</label>
 
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={loginData.email}
+            onChange={handleChange}
             placeholder="Enter your email"
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
 
+          {/* Password */}
           <label className="font-semibold">Password</label>
 
           <div className="relative">
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={loginData.password}
+              onChange={handleChange}
               placeholder="Enter your password"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
@@ -95,11 +102,11 @@ function Login() {
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2">
               <input type="checkbox" />
-              Remember
+              Remember Me
             </label>
 
             <a href="#" className="text-orange-500 hover:text-orange-600">
-              Forgot password?
+              Forgot Password?
             </a>
           </div>
 
