@@ -8,7 +8,15 @@ const UserSchema = mongoose.Schema(
     dob: { type: Date, default: Date.now },
     gender: { type: String, required: true },
     phone: { type: String, required: true },
-    photo: { type: String, required: true },
+    photo: {
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+      },
+    },
   },
   {
     timestamps: true,
