@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import Sidebar from "../../components/userDashboard/Sidebar";
-import Overview from "../../components/userDashboard/Overview";
-import Orders from "../../components/userDashboard/Orders";
-import Settings from "../../components/userDashboard/Settings";
-import WishList from "../../components/userDashboard/WishList";
+import Sidebar from "../../components/customerDashboard/Sidebar";
+import Overview from "../../components/customerDashboard/Overview";
+import Orders from "../../components/customerDashboard/Orders";
+import Settings from "../../components/customerDashboard/Settings";
+import WishList from "../../components/customerDashboard/WishList";
 
 const UserDashboard = () => {
   const [active, setActive] = useState("Overview");
