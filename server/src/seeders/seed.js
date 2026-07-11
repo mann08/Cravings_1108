@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import connectDB from "../config/dbConnection.config.js";
+import connectDB from "../config/dbConnecton.config.js";
 import adminSeed from "./admin.seed.js";
 import userSeed from "./user.seed.js";
 

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const { setUser, setIsLogin } = useAuth();
+  const { setUser, setIsLogin, setRole } = useAuth();
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
@@ -36,12 +36,21 @@ function Login() {
 
       toast.success(res.data.message);
 
-      sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+      sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
 
       setUser(res.data.data);
       setIsLogin(true);
+      setRole(res.data.data.userType);
 
-      navigate("/user/dashboard");
+      if (res.data.data.userType === "restaurant") {
+        navigate("/restaurant-dashboard");
+      } else if (res.data.data.userType === "rider") {
+        navigate("/rider-dashboard");
+      } else if (res.data.data.userType === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/customer-dashboard");
+      }
     } catch (error) {
       toast.error(
         error.response?.data?.message || error.message || "Login Failed",

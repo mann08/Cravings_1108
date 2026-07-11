@@ -4,19 +4,14 @@ const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
-    JSON.parse(sessionStorage.getItem("UserData")) || "",
+    JSON.parse(sessionStorage.getItem("cravingUser")) || null,
   );
   const [isLogin, setIsLogin] = useState(!!user);
+  const [role, setRole] = useState(user?.userType || null);
 
   useEffect(() => {
-    // long method
-    // if (user) {
-    //   setIsLogin(true);
-    // } else {
-    //   setIsLogin(false);
-    // }
-    // short method
     setIsLogin(!!user);
+    setRole(user?.userType || null);
   }, [user]);
 
   const value = {
@@ -24,6 +19,8 @@ export const AuthProvider = ({ children }) => {
     setUser,
     isLogin,
     setIsLogin,
+    role,
+    setRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
