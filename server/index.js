@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import cloudinary from "./src/config/cloudinary.config.js";
 import express from "express";
 
@@ -8,7 +11,7 @@ import CommonRouter from "./src/routers/common.route.js";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import RestaurantRouter from "./src/router/restaurant.route.js";
+import RestaurantRouter from "./src/routers/restaurant.route.js";
 
 const app = express();
 
