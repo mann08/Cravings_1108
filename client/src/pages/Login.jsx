@@ -5,6 +5,7 @@ import api from "../config/api.config";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import ForgotPasswordModal from "../components/commonModals/ForgotPasswordModal";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const navigate = useNavigate();
