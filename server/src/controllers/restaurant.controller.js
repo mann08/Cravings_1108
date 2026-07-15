@@ -35,7 +35,7 @@ export const RestaurantGetData = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error.message);
-    next();
+    next(error);
   }
 };
 
@@ -120,6 +120,6 @@ export const RestaurantUpdateProfile = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error.message);
-    next();
+    next(error);
   }
 };
