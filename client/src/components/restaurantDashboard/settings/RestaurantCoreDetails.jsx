@@ -472,6 +472,4 @@ const ResturantCoreDetails = () => {
   );
 };
 
-
-
 export default ResturantCoreDetails;
