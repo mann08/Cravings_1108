@@ -35,6 +35,15 @@ const CustomerSchema = mongoose.Schema(
         },
       ],
     },
+    favourites: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "menu",
+        },
+      ],
+      default: [],
+    },
     isActive: {
       type: Boolean,
       default: true,

@@ -12,6 +12,9 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import RestaurantRouter from "./src/routers/restaurant.route.js";
+import CustomerRouter from "./src/routers/customer.route.js";
+import AdminRouter from "./src/routers/admin.route.js";
+import RiderRouter from "./src/routers/rider.route.js";
 
 const app = express();
 
@@ -25,6 +28,9 @@ app.use("/auth", AuthRouter);
 app.use("/public", PublicRouter);
 app.use("/common", CommonRouter);
 app.use("/restaurant", RestaurantRouter);
+app.use("/customer", CustomerRouter);
+app.use("/admin", AdminRouter);
+app.use("/rider", RiderRouter);
 
 //Default API
 app.get("/", (req, res) => {

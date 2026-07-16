@@ -53,6 +53,19 @@ const RiderSchema = mongoose.Schema(
         lon: { type: String },
       },
     },
+    earnings: {
+      type: [
+        {
+          orderId: { type: mongoose.Schema.Types.ObjectId, ref: "order" },
+          amount: { type: Number, required: true },
+          date: { type: Date, default: Date.now },
+          status: { type: String, enum: ["pending", "settled"], default: "pending" },
+        },
+      ],
+      default: [],
+    },
+    totalEarnings: { type: Number, default: 0 },
+    totalDeliveries: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
