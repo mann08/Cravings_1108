@@ -1,6 +1,6 @@
 import React from "react";
-import { MdDashboard, MdOutlineStore, MdRestaurantMenu, MdCategory, MdPeople, MdMotorcycle, MdOutlineLocalOffer, MdPayment, MdOutlineRateReview, MdNotificationsNone, MdOutlineLock } from "react-icons/md";
-import { FaHistory, FaSignOutAlt } from "react-icons/fa";
+import { MdDashboard, MdOutlineStore, MdRestaurantMenu, MdCategory, MdPeople, MdOutlineLocalOffer, MdPayment, MdOutlineRateReview, MdNotificationsNone, MdOutlineLock } from "react-icons/md";
+import { FaHistory, FaSignOutAlt, FaMotorcycle } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,7 @@ const AdminSidebar = ({ activeTab, setActiveTab }) => {
     { name: "Food Items", value: "foods", icon: <MdRestaurantMenu /> },
     { name: "Categories", value: "categories", icon: <MdCategory /> },
     { name: "Customers", value: "customers", icon: <MdPeople /> },
-    { name: "Riders", value: "riders", icon: <MdMotorcycle /> },
+    { name: "Riders", value: "riders", icon: <FaMotorcycle /> },
     { name: "Coupons", value: "coupons", icon: <MdOutlineLocalOffer /> },
     { name: "Payments", value: "payments", icon: <MdPayment /> },
     { name: "Reviews", value: "reviews", icon: <MdOutlineRateReview /> },

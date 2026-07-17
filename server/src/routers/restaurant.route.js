@@ -3,6 +3,11 @@ import multer from "multer";
 import {
   RestaurantUpdateProfile,
   RestaurantGetData,
+  getRestaurantDashboardStats,
+  getRestaurantOrders,
+  updateRestaurantOrderStatus,
+  getRestaurantMenu,
+  addRestaurantMenuItem,
 } from "../controllers/restaurant.controller.js";
 import { RestaurantAuthProtect } from "../middleware/auth.middleware.js";
 
@@ -21,4 +26,10 @@ router.post(
   RestaurantUpdateProfile,
 );
 
-export default router;
+router.get("/dashboard-stats", RestaurantAuthProtect, getRestaurantDashboardStats);
+router.get("/orders", RestaurantAuthProtect, getRestaurantOrders);
+router.patch("/orders/:orderId/status", RestaurantAuthProtect, updateRestaurantOrderStatus);
+router.get("/menu", RestaurantAuthProtect, getRestaurantMenu);
+router.post("/menu", RestaurantAuthProtect, addRestaurantMenuItem);
+
+export default router;

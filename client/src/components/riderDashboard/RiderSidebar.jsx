@@ -1,7 +1,7 @@
 import React from "react";
 import { MdDashboard, MdOutlinePlaylistPlay, MdOutlineLocationOn, MdPayment, MdOutlineStarBorder, MdNotificationsNone, MdOutlineLock } from "react-icons/md";
 import { FaHistory, FaSignOutAlt } from "react-icons/fa";
-import { IoMdSettings } from "react-index"; // We will use react-icons/io instead of index
+import { IoMdSettings } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
