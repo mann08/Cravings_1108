@@ -5,8 +5,8 @@ import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import StatusBadge from "../dashboard/shared/StatusBadge";
 import Pagination from "../dashboard/shared/Pagination";
 import EmptyState from "../dashboard/shared/EmptyState";
-import ConfirmModal from "../dashboard/shared/ConfirmModal";
-import { FaSearch, FaTimes, FaUserCheck, FaMapMarkerAlt } from "react-icons/fa";
+
+import { FaSearch, FaTimes } from "react-icons/fa";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -58,7 +58,7 @@ const AdminOrders = () => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      const res = await api.patch(`/admin/orders/${id}/status`, { status });
+      await api.patch(`/admin/orders/${id}/status`, { status });
       toast.success("Order status updated");
       if (selectedOrder && selectedOrder._id === id) {
         setSelectedOrder((prev) => ({ ...prev, orderStatus: status }));
@@ -73,7 +73,7 @@ const AdminOrders = () => {
     e.preventDefault();
     if (!selectedRider) return;
     try {
-      const res = await api.patch(`/admin/orders/${assigningOrder}/assign-rider`, { riderId: selectedRider });
+      await api.patch(`/admin/orders/${assigningOrder}/assign-rider`, { riderId: selectedRider });
       toast.success("Rider assigned successfully");
       setRiderSelectOpen(false);
       setAssigningOrder(null);

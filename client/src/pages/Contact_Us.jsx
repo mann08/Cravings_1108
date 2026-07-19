@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import contactImage from "../images/contactPage.jpg";
-import api from "../config/api.config";
+
 
 const Contact_Us = () => {
   const [formData, setFormData] = useState({

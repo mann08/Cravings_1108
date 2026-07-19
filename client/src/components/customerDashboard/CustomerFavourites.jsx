@@ -3,7 +3,7 @@ import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import EmptyState from "../dashboard/shared/EmptyState";
-import { FaHeart, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 
 const CustomerFavourites = () => {
   const [items, setItems] = useState([]);

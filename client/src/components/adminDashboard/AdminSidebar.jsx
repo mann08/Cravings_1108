@@ -1,5 +1,5 @@
 import React from "react";
-import { MdDashboard, MdOutlineStore, MdRestaurantMenu, MdCategory, MdPeople, MdOutlineLocalOffer, MdPayment, MdOutlineRateReview, MdNotificationsNone, MdOutlineLock } from "react-icons/md";
+import { MdDashboard, MdOutlineStore, MdRestaurantMenu, MdCategory, MdPeople, MdOutlineLocalOffer, MdPayment, MdOutlineRateReview, MdNotificationsNone } from "react-icons/md";
 import { FaHistory, FaSignOutAlt, FaMotorcycle } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { useAuth } from "../../context/AuthContext";

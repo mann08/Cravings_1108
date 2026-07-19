@@ -5,7 +5,7 @@ import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import StatusBadge from "../dashboard/shared/StatusBadge";
 import Pagination from "../dashboard/shared/Pagination";
 import EmptyState from "../dashboard/shared/EmptyState";
-import { FaSearch, FaUserSlash, FaUserCheck, FaMotorcycle } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 const AdminRiders = () => {
   const [riders, setRiders] = useState([]);

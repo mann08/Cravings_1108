@@ -61,7 +61,7 @@ const CustomerOrders = () => {
   const handleReviewOrder = async () => {
     if (!orderToReview) return;
     try {
-      const res = await api.post(`/customer/orders/${orderToReview}/review`, { rating });
+      await api.post(`/customer/orders/${orderToReview}/review`, { rating });
       toast.success("Review submitted successfully");
       setIsReviewModalOpen(false);
       setOrderToReview(null);

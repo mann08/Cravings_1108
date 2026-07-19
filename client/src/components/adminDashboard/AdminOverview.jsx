@@ -3,7 +3,7 @@ import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import StatCard from "../dashboard/shared/StatCard";
-import { FaUsers, FaMotorcycle, FaStore, FaUtensils, FaShoppingBag, FaClock, FaCheckCircle, FaTimesCircle, FaWallet } from "react-icons/fa";
+import { FaUsers, FaMotorcycle, FaStore, FaShoppingBag, FaWallet } from "react-icons/fa";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, PieChart, Pie, Cell } from "recharts";
 
 const AdminOverview = () => {

@@ -10,7 +10,7 @@ import AdminRiders from "../../components/adminDashboard/AdminRiders";
 import AdminRestaurants from "../../components/adminDashboard/AdminRestaurants";
 import AdminFoods from "../../components/adminDashboard/AdminFoods";
 import AdminReports from "../../components/adminDashboard/AdminReports";
-import { FaTag, FaStar, FaMoneyBillWave, FaBell } from "react-icons/fa";
+import { FaTag, FaStar, FaBell } from "react-icons/fa";
 
 const AdminDashboard = () => {
   const { isLogin, role } = useAuth();

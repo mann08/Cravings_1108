@@ -50,11 +50,10 @@ const CustomerSidebar = ({ activeTab, setActiveTab }) => {
           {tabs.map((tab) => (
             <li
               key={tab.value}
-              className={`cursor-pointer p-2 rounded text-sm flex items-center gap-3 transition-colors duration-200 ${
-                activeTab === tab.value
+              className={`cursor-pointer p-2 rounded text-sm flex items-center gap-3 transition-colors duration-200 ${activeTab === tab.value
                   ? "bg-(--color-primary) text-white font-semibold shadow-sm"
                   : "text-(--color-neutral) hover:bg-(--color-base-300) hover:text-(--color-base-content)"
-              }`}
+                }`}
               onClick={() => {
                 if (tab.value === "browse") {
                   navigate("/");

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
@@ -50,7 +49,6 @@ const Login = () => {
     }
 
     setLoading(true);
-    console.log("Login submitted:", formData);
 
     try {
       const res = await api.post("/auth/login", {
@@ -61,7 +59,6 @@ const Login = () => {
       sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
       setUser(res.data.data);
       setIsLogin(true);
-      //console.log(res.data.data.userType);
       setRole(res.data.data.userType);
 
       res.data.data.userType === "restaurant" &&

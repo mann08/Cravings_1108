@@ -3,7 +3,7 @@ import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import EmptyState from "../dashboard/shared/EmptyState";
-import { FaCheckCircle, FaClock, FaMapMarkerAlt, FaMotorcycle, FaUtensils } from "react-icons/fa";
+import { FaCheckCircle, FaClock, FaMotorcycle, FaUtensils } from "react-icons/fa";
 
 const STEPS = [
   { key: "pending", label: "Order Placed", desc: "Waiting for restaurant acceptance", icon: <FaClock /> },

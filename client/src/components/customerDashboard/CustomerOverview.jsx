@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import StatCard from "../dashboard/shared/StatCard";
 import StatusBadge from "../dashboard/shared/StatusBadge";
-import { FaShoppingBag, FaCheckCircle, FaTimesCircle, FaWallet, FaMapMarkerAlt, FaTicketAlt, FaBell } from "react-icons/fa";
+import { FaShoppingBag, FaCheckCircle, FaTimesCircle, FaWallet, FaMapMarkerAlt, FaTicketAlt } from "react-icons/fa";
 
 const CustomerOverview = ({ setActiveTab }) => {
   const { user } = useAuth();

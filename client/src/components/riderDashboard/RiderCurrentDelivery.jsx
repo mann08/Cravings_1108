@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import EmptyState from "../dashboard/shared/EmptyState";
 import StatusBadge from "../dashboard/shared/StatusBadge";
-import { FaPhoneAlt, FaMapMarkedAlt, FaStore, FaUser, FaRoute, FaArrowCircleRight } from "react-icons/fa";
+import { FaPhoneAlt, FaMapMarkedAlt, FaStore, FaUser, FaArrowCircleRight } from "react-icons/fa";
 
 const STEP_LABELS = {
   accepted: "Confirm Reached Restaurant",

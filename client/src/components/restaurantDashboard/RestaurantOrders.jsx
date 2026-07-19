@@ -5,7 +5,7 @@ import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import StatusBadge from "../dashboard/shared/StatusBadge";
 import Pagination from "../dashboard/shared/Pagination";
 import EmptyState from "../dashboard/shared/EmptyState";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
 const RestaurantOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -36,7 +36,7 @@ const RestaurantOrders = () => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      const res = await api.patch(`/restaurant/orders/${id}/status`, { status });
+      await api.patch(`/restaurant/orders/${id}/status`, { status });
       toast.success("Order status updated successfully");
       if (selectedOrder && selectedOrder._id === id) {
         setSelectedOrder((prev) => ({ ...prev, orderStatus: status }));

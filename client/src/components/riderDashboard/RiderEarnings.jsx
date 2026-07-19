@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
-import EmptyState from "../dashboard/shared/EmptyState";
 import Pagination from "../dashboard/shared/Pagination";
 
 const RiderEarnings = () => {

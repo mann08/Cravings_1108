@@ -3,17 +3,14 @@ import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../config/api.config";
 import toast from "react-hot-toast";
-import { MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
-import PasswordChangeModal from "../../commonModals/PasswodChangeModal";
+
 import RunningLoader from "../../../assets/runningLoader.gif";
 
 const ResturantCoreDetails = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   // Common State variables
   const [isLoading, setIsLoading] = useState(false);
-  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
-    useState(false);
 
   // Restaurant handlers
   const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(false);
@@ -112,31 +109,7 @@ const ResturantCoreDetails = () => {
     setEditingRestaurant(false);
   };
 
-  const fetchRestaurantData = async () => {
-    try {
-      setIsLoadingRestaurant(true);
 
-      const res = await api.get(
-        `/restaurant/get-resturant-data?id=${user._id}`,
-      );
-      setRestaurantData(res.data.data);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Unknown error occurred fetching restaurant. Please try again.",
-      );
-      setLoadingRestaurantError(
-        error.response?.data?.message ||
-          "Unknown error occurred fetching restaurant. Please try again.",
-      );
-    } finally {
-      setIsLoadingRestaurant(false);
-    }
-  };
-
-  useEffect(() => {
-    // fetchRestaurantData();
-  }, [user]);
 
   return (
     <>

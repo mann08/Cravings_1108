@@ -6,10 +6,9 @@ import CustomerSidebar from "../../components/customerDashboard/CustomerSidebar"
 import CustomerAddresses from "../../components/customerDashboard/CustomerAddresses";
 import CustomerFavourites from "../../components/customerDashboard/CustomerFavourites";
 import CustomerTrackOrder from "../../components/customerDashboard/CustomerTrackOrder";
-import PasswordChangeModal from "../../components/commonModals/PasswodChangeModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { FaTicketAlt, FaBell } from "react-icons/fa";
+import { FaBell } from "react-icons/fa";
 
 const CustomerDashboard = () => {
   const { isLogin, role } = useAuth();

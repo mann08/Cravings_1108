@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
-import { FaPrint, FaRegCalendarAlt } from "react-icons/fa";
+import { FaPrint } from "react-icons/fa";
 
 const AdminReports = () => {
   const [reports, setReports] = useState(null);
@@ -31,7 +31,7 @@ const AdminReports = () => {
 
   if (loading) return <LoadingSpinner message="Generating reports..." />;
 
-  const { dailyRevenue, topRestaurants, orderStatusBreakdown, newCustomers } = reports || {};
+  const { dailyRevenue, topRestaurants, orderStatusBreakdown } = reports || {};
 
   return (
     <div className="overflow-y-auto h-full space-y-6 pr-1 print:p-8 print:bg-white">
