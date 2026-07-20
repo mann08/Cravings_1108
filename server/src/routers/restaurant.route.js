@@ -26,9 +26,17 @@ router.post(
   RestaurantUpdateProfile,
 );
 
-router.get("/dashboard-stats", RestaurantAuthProtect, getRestaurantDashboardStats);
+router.get(
+  "/dashboard-stats",
+  RestaurantAuthProtect,
+  getRestaurantDashboardStats,
+);
 router.get("/orders", RestaurantAuthProtect, getRestaurantOrders);
-router.patch("/orders/:orderId/status", RestaurantAuthProtect, updateRestaurantOrderStatus);
+router.patch(
+  "/orders/:orderId/status",
+  RestaurantAuthProtect,
+  updateRestaurantOrderStatus,
+);
 router.get("/menu", RestaurantAuthProtect, getRestaurantMenu);
 router.post("/menu", RestaurantAuthProtect, addRestaurantMenuItem);
 
