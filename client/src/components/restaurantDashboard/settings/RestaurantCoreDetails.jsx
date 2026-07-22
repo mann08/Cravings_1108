@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
-import api from "../../../config/api.config";
+import api from "../../../config/ApiConfig";
 import toast from "react-hot-toast";
-
+import { MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
+import PasswordChangeModal from "../../commonModals/PasswordChangeModal";
 import RunningLoader from "../../../assets/runningLoader.gif";
 
 const ResturantCoreDetails = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   // Common State variables
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
+    useState(false);
 
   // Restaurant handlers
   const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(false);
@@ -109,7 +112,44 @@ const ResturantCoreDetails = () => {
     setEditingRestaurant(false);
   };
 
+  const handleGetLocation = () => {
+    try {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position.coords.latitude, position.coords.longitude);
+        setRestaurantFormData((prev) => ({
+          ...prev,
+          geoLat: position.coords.latitude,
+          geoLon: position.coords.longitude,
+        }));
+      });
+    } catch (error) {}
+  };
 
+  const fetchRestaurantData = async () => {
+    try {
+      setIsLoadingRestaurant(true);
+
+      const res = await api.get(
+        `/restaurant/get-resturant-data?id=${user._id}`,
+      );
+      setRestaurantData(res.data.data);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "Unknown error occurred fetching restaurant. Please try again.",
+      );
+      setLoadingRestaurantError(
+        error.response?.data?.message ||
+          "Unknown error occurred fetching restaurant. Please try again.",
+      );
+    } finally {
+      setIsLoadingRestaurant(false);
+    }
+  };
+
+  useEffect(() => {
+    // fetchRestaurantData();
+  }, [user]);
 
   return (
     <>
@@ -151,6 +191,15 @@ const ResturantCoreDetails = () => {
                     </div>
                   ) : (
                     <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={handleGetLocation}
+                        className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-2 py-0.5 rounded text-xs"
+                        disabled={isLoading}
+                      >
+                        {isLoading
+                          ? "Getting Current Location..."
+                          : "Get Current Location"}
+                      </button>
                       <button
                         onClick={handleSaveRestaurant}
                         className="flex items-center gap-2 bg-(--color-primary) text-(--color-primary-content) px-2 py-0.5 rounded text-xs"
@@ -236,7 +285,7 @@ const ResturantCoreDetails = () => {
                         onChange={handleRestaurantChange}
                         placeholder="e.g. 28.6139"
                         className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
-                        disabled={!editingRestaurant}
+                        disabled
                       />
                     </div>
 
@@ -249,7 +298,7 @@ const ResturantCoreDetails = () => {
                         onChange={handleRestaurantChange}
                         placeholder="e.g. 77.2090"
                         className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
-                        disabled={!editingRestaurant}
+                        disabled
                       />
                     </div>
                   </div>
