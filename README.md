@@ -108,4 +108,4 @@ The project contains 76 REST APIs categorized into seven modules.
 
 Each API includes:
 
-Endpoint HTTP Method Authentication Requirement Request Body Response Format Success Status Codes Error Responses
+Endpoint HTTP Method Authentication Requirement Request Body Response Format Success Status Codes Error Responses.
