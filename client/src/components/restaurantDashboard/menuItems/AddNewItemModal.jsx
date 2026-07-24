@@ -97,10 +97,10 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center">
-      <div className="bg-white w-2xl rounded-lg shadow-xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4">
+      <div className="bg-white w-full max-w-2xl rounded-lg shadow-xl max-h-[90vh] flex flex-col">
         {/* Header */}
-        <header className="flex justify-between items-center p-4 border-b border-(--color-secondary) sticky top-0 bg-white z-10">
+        <header className="flex justify-between items-center p-4 border-b border-(--color-secondary) bg-white z-10 rounded-t-lg flex-shrink-0">
           <h2 className="font-bold text-xl text-(--color-primary)">
             Add New Menu Item
           </h2>
@@ -110,8 +110,8 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
         </header>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
-          <main className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <main className="p-6 space-y-4 overflow-y-auto flex-1">
             {/* Image Upload */}
             <div className="flex flex-col gap-2">
               <label className="font-semibold text-sm">Item Image</label>
@@ -296,7 +296,7 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
           </main>
 
           {/* Footer */}
-          <footer className="p-4 border-t border-(--color-secondary) flex justify-end gap-3 sticky bottom-0 bg-white">
+          <footer className="p-4 border-t border-(--color-secondary) flex justify-end gap-3 bg-white rounded-b-lg flex-shrink-0">
             <button
               type="button"
               onClick={handleClose}

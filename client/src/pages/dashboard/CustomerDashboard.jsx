@@ -20,7 +20,7 @@ const CustomerDashboard = () => {
 
   if (!isLogin || role !== "customer") {
     return (
-      <div className="h-[92vh] bg-[url('/foodTable.webp')] bg-cover bg-center">
+      <div className="h-[calc(100vh-4rem)] bg-[url('/foodTable.webp')] bg-cover bg-center">
         <div className="h-full backdrop-blur-lg flex flex-col items-center justify-center ">
           <h1 className="text-2xl font-bold text-(--color-neutral-content)">
             Access Denied. Please log in as a customer to view this page.
@@ -115,7 +115,7 @@ const CustomerDashboard = () => {
   };
 
   return (
-    <div className="min-h-[91vh] flex flex-col md:flex-row gap-4 p-4 bg-(--color-base-100)">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col md:flex-row gap-4 p-4 bg-(--color-base-100)">
       {/* Sidebar Panel */}
       <div className="w-full md:w-1/4 lg:w-1/5 bg-(--color-base-200) p-4 rounded-xl shadow-md border border-(--color-base-300)">
         <CustomerSidebar activeTab={activeTab} setActiveTab={setActiveTab} />

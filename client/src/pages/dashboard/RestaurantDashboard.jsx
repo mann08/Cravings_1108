@@ -15,7 +15,7 @@ const RestaurantDashboard = () => {
 
   if (!isLogin || role !== "restaurant") {
     return (
-      <div className="h-[92vh] bg-[url('/foodTable.webp')]  bg-cover bg-center">
+      <div className="h-[calc(100vh-4rem)] bg-[url('/foodTable.webp')]  bg-cover bg-center">
         <div className="h-full backdrop-blur-lg flex flex-col items-center justify-center ">
           <h1 className="text-2xl font-bold text-(--color-neutral-content)">
             Access Denied. Please log in as a Restaurant Manager to view this
@@ -34,7 +34,7 @@ const RestaurantDashboard = () => {
 
   return (
     <>
-      <div className="h-[91vh] flex gap-2 p-2">
+      <div className="h-[calc(100vh-4rem)] flex gap-2 p-2">
         <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
           <RestaurantSidebar
             activeTab={activeTab}
