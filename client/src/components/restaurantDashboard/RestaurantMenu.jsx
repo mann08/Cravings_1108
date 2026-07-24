@@ -1,417 +1,439 @@
-import React, { useEffect, useState } from "react";
-import api from "../../config/api.config.js";
-import toast from "react-hot-toast";
-import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
-import EmptyState from "../dashboard/shared/EmptyState";
-import ConfirmModal from "../dashboard/shared/ConfirmModal";
-import { FaPlus, FaEdit, FaTrash, FaToggleOn, FaToggleOff, FaSearch, FaStar, FaTag } from "react-icons/fa";
-import { MdRestaurantMenu } from "react-icons/md";
+import React, { useState } from "react";
+import { FaAward, FaRegGrinStars } from "react-icons/fa";
+import { BiSolidDish } from "react-icons/bi";
+import { LuPencilLine, LuTrash2, LuEye, LuChevronDown } from "react-icons/lu";
+import { AiTwotoneLike } from "react-icons/ai";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import ConfirmModal from "./menuItems/ConfirmModal";
+import AddNewItemModal from "./menuItems/AddNewItemModal";
 
-const CATEGORIES = ["All", "Starters", "Main Course", "Breads & Rice", "Desserts", "Beverages", "Snacks", "Soups", "Salads"];
+const dummyMenu = [
+  {
+    itemName: "Classic Margherita Pizza",
+    description: "Fresh mozzarella, tomato sauce, basil leaves, and oregano.",
+    price: 299,
+    category: "Pizza",
+    type: "Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&h=600&fit=crop",
+      publicId: "dummy-pizza-1",
+    },
+    status: "available",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Crispy Veg Burger",
+    description:
+      "Loaded with crispy vegetable patty, lettuce, cheese, and mayo.",
+    price: 179,
+    category: "Burger",
+    type: "Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=600&fit=crop",
+      publicId: "dummy-burger-1",
+    },
+    status: "available",
+    isTopRated: false,
+    isRecommended: true,
+    isNew: true,
+    isDeleted: false,
+  },
+  {
+    itemName: "Paneer Tikka Wrap",
+    description:
+      "Soft tortilla stuffed with spicy paneer tikka and fresh veggies.",
+    price: 229,
+    category: "Wrap",
+    type: "Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=600&fit=crop",
+      publicId: "dummy-wrap-1",
+    },
+    status: "unavailable",
+    isTopRated: true,
+    isRecommended: false,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Chocolate Brownie Sundae",
+    description: "Warm chocolate brownie served with vanilla ice cream.",
+    price: 199,
+    category: "Dessert",
+    type: "Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&h=600&fit=crop",
+      publicId: "dummy-dessert-1",
+    },
+    status: "available",
+    isTopRated: false,
+    isRecommended: true,
+    isNew: true,
+    isDeleted: false,
+  },
+  {
+    itemName: "Cold Coffee Delight",
+    description: "Refreshing chilled coffee topped with whipped cream.",
+    price: 149,
+    category: "Beverages",
+    type: "Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=600&fit=crop",
+      publicId: "dummy-coffee-1",
+    },
+    status: "discontinued",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Chicken Tikka Pizza",
+    description:
+      "Stone-baked pizza topped with spicy chicken tikka and mozzarella.",
+    price: 399,
+    category: "Pizza",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop",
+      publicId: "dummy-chicken-pizza",
+    },
+    status: "available",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Grilled Chicken Burger",
+    description:
+      "Juicy grilled chicken patty with lettuce, cheese, and smoky sauce.",
+    price: 279,
+    category: "Burger",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&h=600&fit=crop",
+      publicId: "dummy-chicken-burger",
+    },
+    status: "available",
+    isTopRated: true,
+    isRecommended: false,
+    isNew: true,
+    isDeleted: false,
+  },
+  {
+    itemName: "Butter Chicken",
+    description: "Tender chicken cooked in a rich, creamy tomato gravy.",
+    price: 429,
+    category: "Main Course",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=600&fit=crop",
+      publicId: "dummy-butter-chicken",
+    },
+    status: "unavailable",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Chicken Biryani",
+    description:
+      "Fragrant basmati rice cooked with marinated chicken and aromatic spices.",
+    price: 349,
+    category: "Biryani",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600&h=600&fit=crop",
+      publicId: "dummy-chicken-biryani",
+    },
+    status: "available",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: true,
+    isDeleted: false,
+  },
+  {
+    itemName: "Fish & Chips",
+    description:
+      "Crispy battered fish fillet served with golden fries and tartar sauce.",
+    price: 379,
+    category: "Seafood",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1579208575657-c595a05383b7?w=600&h=600&fit=crop",
+      publicId: "dummy-fish-chips",
+    },
+    status: "available",
+    isTopRated: false,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Prawn Fried Rice",
+    description:
+      "Wok-tossed fried rice with juicy prawns, vegetables, and soy sauce.",
+    price: 389,
+    category: "Rice",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=600&fit=crop",
+      publicId: "dummy-prawn-rice",
+    },
+    status: "discontinued",
+    isTopRated: false,
+    isRecommended: false,
+    isNew: true,
+    isDeleted: false,
+  },
+  {
+    itemName: "Chicken Shawarma Wrap",
+    description:
+      "Grilled chicken wrapped with fresh veggies, garlic sauce, and pita bread.",
+    price: 249,
+    category: "Wrap",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&h=600&fit=crop",
+      publicId: "dummy-shawarma-wrap",
+    },
+    status: "available",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+  {
+    itemName: "Spicy Chicken Wings",
+    description: "Crispy chicken wings tossed in a fiery hot sauce.",
+    price: 299,
+    category: "Starter",
+    type: "Non-Vegetarian",
+    image: {
+      url: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=600&h=600&fit=crop",
+      publicId: "dummy-chicken-wings",
+    },
+    status: "unavailable",
+    isTopRated: true,
+    isRecommended: true,
+    isNew: false,
+    isDeleted: false,
+  },
+];
 
-const defaultForm = {
-  itemName: "",
-  description: "",
-  price: "",
-  category: "Main Course",
-  isRecommended: false,
-  isTopRated: false,
-  isNew: true,
+const statusChipStyles = {
+  available: "bg-green-100 text-green-700 border border-green-300",
+  unavailable: "bg-amber-100 text-amber-700 border border-amber-300",
+  discontinued: "bg-rose-100 text-rose-700 border border-rose-300",
+};
+
+const statusLabels = {
+  available: "Available",
+  unavailable: "Unavailable",
+  discontinued: "Discontinued",
 };
 
 const RestaurantMenu = () => {
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [menuItems, setMenuItems] = useState(dummyMenu);
 
-  // Add / Edit modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState(defaultForm);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Delete confirm modal
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
-
-  const fetchMenu = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get("/restaurant/menu");
-      setMenuItems(res.data.data || []);
-    } catch (error) {
-      toast.error("Failed to load menu");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMenu();
-  }, []);
-
-  const openAddModal = () => {
-    setEditingItem(null);
-    setFormData(defaultForm);
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (item) => {
-    setEditingItem(item);
-    setFormData({
-      itemName: item.itemName,
-      description: item.description,
-      price: item.price,
-      category: item.category,
-      isRecommended: item.isRecommended || false,
-      isTopRated: item.isTopRated || false,
-      isNew: item.isNew || false,
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleFormChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
-  };
-
-  const handleSave = async () => {
-    if (!formData.itemName || !formData.description || !formData.price || !formData.category) {
-      toast.error("All fields are required");
-      return;
-    }
-    try {
-      setIsSaving(true);
-      if (editingItem) {
-        const res = await api.put(`/restaurant/menu/${editingItem._id}`, formData);
-        setMenuItems(res.data.data);
-        toast.success("Item updated!");
-      } else {
-        const res = await api.post("/restaurant/menu", formData);
-        setMenuItems(res.data.data);
-        toast.success("Item added to menu!");
-      }
-      setIsModalOpen(false);
-      setEditingItem(null);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to save item");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleToggle = async (itemId, currentState) => {
-    try {
-      const res = await api.patch(`/restaurant/menu/${itemId}/toggle`);
-      setMenuItems(res.data.data);
-      toast.success(currentState ? "Item marked unavailable" : "Item marked available");
-    } catch (err) {
-      toast.error("Failed to toggle availability");
-    }
-  };
-
-  const confirmDelete = (item) => {
-    setItemToDelete(item);
-    setIsDeleteOpen(true);
-  };
-
-  const handleDelete = async () => {
-    if (!itemToDelete) return;
-    try {
-      const res = await api.delete(`/restaurant/menu/${itemToDelete._id}`);
-      setMenuItems(res.data.data);
-      toast.success("Item deleted");
-    } catch (err) {
-      toast.error("Failed to delete item");
-    } finally {
-      setIsDeleteOpen(false);
-      setItemToDelete(null);
-    }
-  };
-
-  const filteredItems = menuItems.filter((item) => {
-    const matchCategory = categoryFilter === "All" || item.category === categoryFilter;
-    const matchSearch = !searchQuery || item.itemName.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCategory && matchSearch;
-  });
-
-  if (loading) return <LoadingSpinner message="Loading your menu..." />;
+  const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);
+  const [isEditViewItemModalOpen, setIsEditViewItemModalOpen] = useState(false);
+  const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   return (
-    <div className="overflow-y-auto h-full space-y-4 pr-1">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <MdRestaurantMenu className="text-2xl text-(--color-primary)" />
-          <h2 className="text-xl font-bold text-(--color-base-content)">Menu Management</h2>
-          <span className="bg-(--color-primary)/10 text-(--color-primary) text-xs font-bold px-2 py-0.5 rounded-full">
-            {menuItems.length} items
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <FaSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-(--color-secondary) text-xs" />
+    <>
+      <div className="overflow-y-auto h-full">
+        <div className="flex justify-between items-center px-1">
+          <h2 className="text-2xl font-bold mb-6">Menu Management</h2>
+          <div className="flex gap-4 items-center">
+            <button
+              className="hover:bg-(--color-primary) border border-(--color-primary) text-(--color-primary) hover:text-white px-4 py-2 rounded transition-colors flex items-center gap-2"
+              onClick={() => setIsAddNewItemModalOpen(true)}
+            >
+              <IoMdAddCircleOutline />
+              Add New Item
+            </button>
             <input
               type="text"
+              name="search"
+              id="search"
               placeholder="Search menu..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-7 pr-3 py-1.5 border border-(--color-base-300) rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-(--color-primary) bg-white"
+              className="border border-(--color-primary) rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-colors"
             />
           </div>
-          <button
-            onClick={openAddModal}
-            className="flex items-center gap-1.5 bg-(--color-primary) text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-orange-700 transition-colors shadow-sm"
-          >
-            <FaPlus /> Add Item
-          </button>
         </div>
-      </div>
-
-      {/* Category Filter Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategoryFilter(cat)}
-            className={`shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-              categoryFilter === cat
-                ? "bg-(--color-primary) text-white shadow-sm"
-                : "bg-(--color-base-200) text-(--color-neutral) hover:bg-(--color-base-300)"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Menu Grid */}
-      {filteredItems.length === 0 ? (
-        <EmptyState
-          title="No menu items found"
-          message={
-            menuItems.length === 0
-              ? "Your menu is empty. Add your first item!"
-              : "No items match your filter."
-          }
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredItems.map((item) => (
-            <div
-              key={item._id}
-              className={`bg-(--color-base-200) rounded-xl border shadow-sm overflow-hidden transition-all ${
-                item.isAvailable
-                  ? "border-(--color-base-300)"
-                  : "border-red-200 opacity-60"
-              }`}
-            >
-              {/* Image */}
-              <div className="relative">
-                <img
-                  src={item.image?.url || `https://placehold.co/400x200/F97316/ffffff?text=${encodeURIComponent(item.itemName)}`}
-                  alt={item.itemName}
-                  className="w-full h-32 object-cover"
-                />
-                {/* Badges */}
-                <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
-                  {item.isNew && (
-                    <span className="bg-blue-500 text-white text-xxs font-bold px-1.5 py-0.5 rounded">NEW</span>
-                  )}
-                  {item.isTopRated && (
-                    <span className="bg-yellow-500 text-white text-xxs font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                      <FaStar className="text-xxs" /> TOP
-                    </span>
-                  )}
-                  {item.isRecommended && (
-                    <span className="bg-green-500 text-white text-xxs font-bold px-1.5 py-0.5 rounded">REC</span>
-                  )}
-                </div>
-                <div className="absolute top-2 right-2">
-                  <span
-                    className={`text-xxs font-bold px-2 py-0.5 rounded-full ${
-                      item.isAvailable ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {item.isAvailable ? "In Stock" : "Unavailable"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Info */}
-              <div className="p-3 space-y-2">
-                <div className="flex justify-between items-start gap-2">
+        <div className="bg-(--color-base-200) p-4 rounded-lg">
+          <div className="text-(--color-primary) grid grid-cols-7 gap-4 font-bold border-b border-(--color-secondary) py-2">
+            <div className="col-span-2">Item Name & Description</div>
+            <div className="text-center">Price</div>
+            <div>Category & Type</div>
+            <div>Status</div>
+            <div>Controls</div>
+            <div>Actions</div>
+          </div>
+          <div className="overflow-y-auto max-h-[65vh]">
+            {menuItems.map((item, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
+              >
+                <div className="col-span-2 flex items-center gap-4">
                   <div>
-                    <h4 className="font-bold text-sm text-(--color-base-content) leading-tight">{item.itemName}</h4>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <FaTag className="text-xxs text-(--color-secondary)" />
-                      <span className="text-xxs text-(--color-secondary)">{item.category}</span>
+                    <img
+                      src={item.image.url}
+                      alt={item.itemName}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <div>{item.itemName}</div>
+                    <div className="text-xs text-gray-500">
+                      {item.description}
                     </div>
                   </div>
-                  <p className="font-extrabold text-(--color-primary) text-sm shrink-0">₹{item.price}</p>
                 </div>
-                <p className="text-xxs text-(--color-neutral) leading-relaxed line-clamp-2">{item.description}</p>
-
-                {/* Action Row */}
-                <div className="flex items-center justify-between pt-2 border-t border-(--color-base-300)/50">
-                  <button
-                    onClick={() => handleToggle(item._id, item.isAvailable)}
-                    className={`text-xl transition-transform active:scale-95 ${
-                      item.isAvailable ? "text-(--color-success)" : "text-gray-400"
-                    }`}
-                    title={item.isAvailable ? "Mark unavailable" : "Mark available"}
-                  >
-                    {item.isAvailable ? <FaToggleOn /> : <FaToggleOff />}
-                  </button>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => openEditModal(item)}
-                      className="bg-(--color-base-300) text-(--color-neutral) px-2 py-1 rounded text-xs hover:bg-(--color-primary) hover:text-white transition-colors flex items-center gap-1"
+                <div className="text-center">₹ {item.price.toFixed(2)}</div>
+                <div className="">
+                  <div>{item.category}</div>
+                  <div className="text-sm">{item.type}</div>
+                </div>
+                <div>
+                  <div className="relative inline-flex items-center">
+                    <select
+                      value={item.status}
+                      className={`appearance-none rounded-md pl-3 pr-8 py-1.5 text-xs font-semibold tracking-wide transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--color-primary) ${
+                        statusChipStyles[item.status]
+                      }`}
+                      onChange={(e) => {
+                        // Handle status change logic here
+                      }}
                     >
-                      <FaEdit className="text-xxs" /> Edit
-                    </button>
-                    <button
-                      onClick={() => confirmDelete(item)}
-                      className="bg-red-50 text-red-500 px-2 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition-colors flex items-center gap-1"
-                    >
-                      <FaTrash className="text-xxs" /> Delete
-                    </button>
+                      <option value="available">
+                        {statusLabels.available}
+                      </option>
+                      <option value="unavailable">
+                        {statusLabels.unavailable}
+                      </option>
+                      <option value="discontinued">
+                        {statusLabels.discontinued}
+                      </option>
+                    </select>
+                    <LuChevronDown className="pointer-events-none absolute right-2 text-xs opacity-70" />
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* Add / Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="p-4 border-b border-gray-200 bg-orange-50">
-              <h3 className="font-bold text-lg text-(--color-primary)">
-                {editingItem ? "Edit Menu Item" : "Add New Menu Item"}
-              </h3>
-            </div>
-            <div className="p-5 space-y-3 max-h-[70vh] overflow-y-auto">
-              <div>
-                <label className="text-xs font-semibold text-gray-700">Item Name *</label>
-                <input
-                  type="text"
-                  name="itemName"
-                  value={formData.itemName}
-                  onChange={handleFormChange}
-                  placeholder="e.g. Paneer Butter Masala"
-                  className="w-full mt-0.5 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-(--color-primary)"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-gray-700">Price (₹) *</label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleFormChange}
-                    placeholder="e.g. 280"
-                    min="0"
-                    className="w-full mt-0.5 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-(--color-primary)"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-gray-700">Category *</label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleFormChange}
-                    className="w-full mt-0.5 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-(--color-primary)"
+                <div className="flex gap-2">
+                  <button
+                    className={`rounded flex items-center justify-center ${
+                      item.isTopRated
+                        ? " text-(--color-primary)"
+                        : "text-(--color-secondary)"
+                    }`}
+                    title={item.isTopRated ? "Top Rated" : "Mark as Top Rated"}
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("topRated");
+                      setIsControlsModalOpen(true);
+                    }}
                   >
-                    {CATEGORIES.filter((c) => c !== "All").map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                    <FaAward className="" />
+                  </button>
+                  <button
+                    className={`rounded flex items-center justify-center ${
+                      item.isRecommended
+                        ? "text-(--color-primary)"
+                        : "text-(--color-secondary)"
+                    }`}
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("recommended");
+                      setIsControlsModalOpen(true);
+                    }}
+                    title={
+                      item.isRecommended ? "Recommended" : "Mark as Recommended"
+                    }
+                  >
+                    <AiTwotoneLike className="" />
+                  </button>
+                  <button
+                    className={`px-1 py-0.5 rounded flex items-center justify-center text-xs ${
+                      item.isNew
+                        ? "text-(--color-primary) border border-(--color-primary)"
+                        : "text-(--color-secondary) border border-(--color-secondary)"
+                    }`}
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("new");
+                      setIsControlsModalOpen(true);
+                    }}
+                    title={item.isNew ? "New Item" : "Mark as New"}
+                  >
+                    New
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    className="px-2 py-1 border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white rounded"
+                    title="Edit Item"
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("edit");
+                      setIsEditViewItemModalOpen(true);
+                    }}
+                  >
+                    <LuPencilLine />
+                  </button>
+                  <button
+                    className="px-2 py-1 border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white rounded"
+                    title="View Item Details"
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("view");
+                      setIsEditViewItemModalOpen(true);
+                    }}
+                  >
+                    <LuEye />
+                  </button>
+                  <button
+                    className="px-2 py-1 border border-(--color-primary) text-(--color-primary) hover:bg-(--color-primary) hover:text-white rounded"
+                    title="Delete Item"
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setModalMode("delete");
+                      setIsControlsModalOpen(true);
+                    }}
+                  >
+                    <LuTrash2 />
+                  </button>
                 </div>
               </div>
-
-              <div>
-                <label className="text-xs font-semibold text-gray-700">Description *</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleFormChange}
-                  placeholder="Describe the dish..."
-                  rows={3}
-                  className="w-full mt-0.5 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-(--color-primary) resize-none"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    name="isNew"
-                    checked={formData.isNew}
-                    onChange={handleFormChange}
-                    className="accent-(--color-primary)"
-                  />
-                  New Item
-                </label>
-                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    name="isRecommended"
-                    checked={formData.isRecommended}
-                    onChange={handleFormChange}
-                    className="accent-(--color-primary)"
-                  />
-                  Recommended
-                </label>
-                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    name="isTopRated"
-                    checked={formData.isTopRated}
-                    onChange={handleFormChange}
-                    className="accent-(--color-primary)"
-                  />
-                  Top Rated
-                </label>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-gray-200 flex justify-end gap-2 bg-gray-50">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg text-xs hover:bg-gray-300 transition-colors"
-                disabled={isSaving}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-(--color-primary) text-white font-medium rounded-lg text-xs hover:bg-orange-700 transition-colors shadow"
-                disabled={isSaving}
-              >
-                {isSaving ? "Saving..." : editingItem ? "Update Item" : "Add to Menu"}
-              </button>
-            </div>
+            ))}
           </div>
         </div>
+      </div>
+
+      {isControlsModalOpen && (
+        <ConfirmModal
+          selectedItem={selectedItem}
+          modalMode={modalMode}
+          isOpen={isControlsModalOpen}
+          onClose={() => setIsControlsModalOpen(false)}
+        />
       )}
 
-      {/* Delete Confirm */}
-      <ConfirmModal
-        isOpen={isDeleteOpen}
-        title="Delete Menu Item"
-        message={`Are you sure you want to remove "${itemToDelete?.itemName}" from your menu? This cannot be undone.`}
-        onConfirm={handleDelete}
-        onClose={() => { setIsDeleteOpen(false); setItemToDelete(null); }}
+      <AddNewItemModal
+        isOpen={isAddNewItemModalOpen}
+        onClose={() => setIsAddNewItemModalOpen(false)}
+        onAdd={(newItem) => setMenuItems((prev) => [newItem, ...prev])}
       />
-    </div>
+    </>
   );
 };
 
