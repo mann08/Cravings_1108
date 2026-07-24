@@ -6,15 +6,17 @@ import CustomerSidebar from "../../components/customerDashboard/CustomerSidebar"
 import CustomerAddresses from "../../components/customerDashboard/CustomerAddresses";
 import CustomerFavourites from "../../components/customerDashboard/CustomerFavourites";
 import CustomerTrackOrder from "../../components/customerDashboard/CustomerTrackOrder";
+import PlaceOrderModal from "../../components/customerDashboard/PlaceOrderModal";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaShoppingCart } from "react-icons/fa";
 
 const CustomerDashboard = () => {
   const { isLogin, role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");
+  const [isOrderModalOpen, setIsOrderModalOpen] = React.useState(false);
 
   if (!isLogin || role !== "customer") {
     return (
@@ -120,9 +122,23 @@ const CustomerDashboard = () => {
       </div>
 
       {/* Main Panel Content */}
-      <div className="flex-1 bg-(--color-base-100) p-2 rounded-xl h-full min-h-[75vh]">
+      <div className="flex-1 bg-(--color-base-100) p-2 rounded-xl h-full min-h-[75vh] relative">
         {renderContent()}
+        {/* Floating Order Now Button */}
+        <button
+          onClick={() => setIsOrderModalOpen(true)}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-(--color-primary) text-white font-bold px-5 py-3 rounded-full shadow-lg hover:bg-orange-700 transition-all hover:scale-105 active:scale-95"
+        >
+          <FaShoppingCart /> Order Now
+        </button>
       </div>
+
+      {isOrderModalOpen && (
+        <PlaceOrderModal
+          onClose={() => setIsOrderModalOpen(false)}
+          onOrderPlaced={() => setActiveTab("orders")}
+        />
+      )}
     </div>
   );
 };

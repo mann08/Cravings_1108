@@ -444,3 +444,142 @@ export const removeFavourite = async (req, res, next) => {
     next(error);
   }
 };
+
+// ─── GET /customer/restaurants ─────────────────────────────────────────────────
+export const getPublicRestaurants = async (req, res, next) => {
+  try {
+    const restaurants = await Restaurant.find({ status: "active" })
+      .select("restaurantName coverImage cuisineTypes restaurantType averageRating city address isOpen")
+      .sort({ averageRating: -1 })
+      .lean();
+
+    res.status(200).json({ message: "Restaurants fetched", data: restaurants });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+// ─── GET /customer/restaurants/:restaurantId/menu ──────────────────────────────
+export const getRestaurantPublicMenu = async (req, res, next) => {
+  try {
+    const { restaurantId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      const error = new Error("Invalid restaurant ID");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const menu = await Menu.findOne({ restaurantId }).lean();
+    const restaurant = await Restaurant.findById(restaurantId)
+      .select("restaurantName city address contactDetails averageRating")
+      .lean();
+
+    res.status(200).json({
+      message: "Menu fetched",
+      data: { restaurant, menuItems: menu ? menu.menuItems.filter(i => i.isAvailable) : [] },
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+// ─── POST /customer/order ──────────────────────────────────────────────────────
+export const placeOrder = async (req, res, next) => {
+  try {
+    const customerDoc = await getCustomerDoc(req.user._id);
+    const { restaurantId, orderItems, deliveryAddressId, paymentMethod = "upi" } = req.body;
+
+    if (!restaurantId || !orderItems?.length || !deliveryAddressId) {
+      const error = new Error("restaurantId, orderItems, and deliveryAddressId are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      const error = new Error("Invalid restaurant ID");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      const error = new Error("Restaurant not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const deliveryAddr = customerDoc.addressBook.id(deliveryAddressId);
+    if (!deliveryAddr) {
+      const error = new Error("Delivery address not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    // Validate items & compute total
+    const menu = await Menu.findOne({ restaurantId }).lean();
+    if (!menu) {
+      const error = new Error("No menu available for this restaurant");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    let totalAmount = 0;
+    const validatedItems = [];
+    for (const oi of orderItems) {
+      const menuItem = menu.menuItems.find((m) => m._id.toString() === oi.itemId);
+      if (!menuItem) {
+        const error = new Error(`Menu item ${oi.itemId} not found`);
+        error.statusCode = 400;
+        return next(error);
+      }
+      if (!menuItem.isAvailable) {
+        const error = new Error(`${menuItem.itemName} is currently unavailable`);
+        error.statusCode = 400;
+        return next(error);
+      }
+      totalAmount += menuItem.price * oi.quantity;
+      validatedItems.push({ itemId: menuItem._id, quantity: oi.quantity });
+    }
+
+    // Bill computation
+    const deliveryCharge = totalAmount < 200 ? 40 : 20;
+    const platformFee = 5;
+    const convenienceFee = 2;
+    const taxAmount = Math.round(totalAmount * 0.05);
+    const discountAmount = 0;
+    const finalAmount = totalAmount + deliveryCharge + platformFee + convenienceFee + taxAmount - discountAmount;
+
+    const order = await Order.create({
+      restaurantId,
+      customerId: customerDoc._id,
+      orderItems: validatedItems,
+      deliveryAddress: {
+        name: deliveryAddr.name,
+        address: deliveryAddr.address,
+        city: deliveryAddr.city,
+        state: deliveryAddr.state,
+        pinCode: deliveryAddr.pinCode,
+        country: deliveryAddr.country,
+      },
+      paymentDetails: { paymentMethod, paymentStatus: "completed" },
+      billDetails: {
+        totalAmount,
+        deliveryCharge,
+        platformFee,
+        convenienceFee,
+        taxAmount,
+        discountAmount,
+        finalAmount,
+      },
+      orderStatus: "pending",
+    });
+
+    res.status(201).json({ message: "Order placed successfully", data: order });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+

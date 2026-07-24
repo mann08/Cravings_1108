@@ -91,9 +91,6 @@ export const UpdateUserPassword = async (req, res, next) => {
     currentUser.password = hashedPassword;
     await currentUser.save();
 
-    // Delay for 3 seconds before sending the response
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     console.log(error.message);

@@ -9,6 +9,45 @@ import {
   deleteSingleImage,
 } from "../utils/image.service.js";
 
+const DEMO_MENU_ITEMS = [
+  {
+    itemName: "Paneer Butter Masala",
+    description: "Creamy tomato gravy with soft paneer and aromatic spices.",
+    price: 280,
+    category: "Main Course",
+    isRecommended: true,
+    isTopRated: true,
+    isNew: false,
+  },
+  {
+    itemName: "Margherita Pizza",
+    description: "Stone-baked pizza with tomato, mozzarella, and basil.",
+    price: 320,
+    category: "Main Course",
+    isRecommended: true,
+    isTopRated: false,
+    isNew: true,
+  },
+  {
+    itemName: "Chicken Biryani",
+    description: "Fragrant basmati rice layered with tender chicken and spices.",
+    price: 360,
+    category: "Breads & Rice",
+    isRecommended: true,
+    isTopRated: true,
+    isNew: false,
+  },
+  {
+    itemName: "Mango Lassi",
+    description: "Chilled, refreshing yogurt drink blended with ripe mango.",
+    price: 120,
+    category: "Beverages",
+    isRecommended: false,
+    isTopRated: false,
+    isNew: true,
+  },
+];
+
 export const RestaurantGetData = async (req, res, next) => {
   try {
     const currentUser = req.user;
@@ -99,8 +138,9 @@ export const RestaurantUpdateProfile = async (req, res, next) => {
         restaurantDataFromFE.restaurantImage = restaurantImage;
       }
       dataKeys.forEach((key) => {
-        existingRestaurant[key] =
-          restaurantDataFromFE[key] || existingRestaurant[key];
+        if (restaurantDataFromFE[key] !== undefined) {
+          existingRestaurant[key] = restaurantDataFromFE[key];
+        }
       });
       await existingRestaurant.save();
       return res.status(200).json({
@@ -110,6 +150,33 @@ export const RestaurantUpdateProfile = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error.message);
+    next(error);
+  }
+};
+
+// ─── PATCH /restaurant/status ───────────────────────────────────────────────
+export const updateRestaurantStatus = async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findOne({ managerId: req.user._id });
+    if (!restaurant) {
+      const error = new Error("Restaurant profile required first");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    if (typeof req.body.isOpen !== "boolean") {
+      const error = new Error("A valid restaurant status is required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    restaurant.isOpen = req.body.isOpen;
+    await restaurant.save();
+    return res.status(200).json({
+      message: "Restaurant status updated successfully",
+      data: restaurant,
+    });
+  } catch (error) {
     next(error);
   }
 };
@@ -250,7 +317,19 @@ export const getRestaurantMenu = async (req, res, next) => {
       return res.status(200).json({ message: "No restaurant found", data: [] });
     }
 
-    const menu = await Menu.findOne({ restaurantId: restaurant._id });
+    let menu = await Menu.findOne({ restaurantId: restaurant._id });
+    if (!menu || menu.menuItems.length === 0) {
+      menu = menu || new Menu({ restaurantId: restaurant._id });
+      menu.menuItems = DEMO_MENU_ITEMS.map((item) => ({
+        ...item,
+        image: {
+          url: `https://placehold.co/600x400/F97316/ffffff?text=${encodeURIComponent(item.itemName)}`,
+          publicId: null,
+        },
+        isAvailable: true,
+      }));
+      await menu.save();
+    }
     res.status(200).json({
       message: "Menu fetched successfully",
       data: menu ? menu.menuItems : [],
@@ -270,7 +349,7 @@ export const addRestaurantMenuItem = async (req, res, next) => {
       return next(error);
     }
 
-    const { itemName, description, price, category } = req.body;
+    const { itemName, description, price, category, isRecommended, isTopRated, isNew } = req.body;
     if (!itemName || !description || !price || !category) {
       const error = new Error("All menu fields are required");
       error.statusCode = 400;
@@ -282,7 +361,7 @@ export const addRestaurantMenuItem = async (req, res, next) => {
       menu = await Menu.create({ restaurantId: restaurant._id, menuItems: [] });
     }
 
-    const photoURL = `https://placehold.co/600x400?text=${encodeURIComponent(itemName)}`;
+    const photoURL = `https://placehold.co/600x400/F97316/ffffff?text=${encodeURIComponent(itemName)}`;
     const image = { url: photoURL, publicId: null };
 
     menu.menuItems.push({
@@ -292,6 +371,9 @@ export const addRestaurantMenuItem = async (req, res, next) => {
       category,
       image,
       isAvailable: true,
+      isRecommended: !!isRecommended,
+      isTopRated: !!isTopRated,
+      isNew: isNew !== undefined ? !!isNew : true,
     });
 
     await menu.save();
@@ -300,3 +382,264 @@ export const addRestaurantMenuItem = async (req, res, next) => {
     next(error);
   }
 };
+
+// ─── PUT /restaurant/menu/:itemId ─────────────────────────────────────────────
+export const updateRestaurantMenuItem = async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findOne({ managerId: req.user._id });
+    if (!restaurant) {
+      const error = new Error("Restaurant profile required first");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const { itemId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+      const error = new Error("Invalid item ID");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const menu = await Menu.findOne({ restaurantId: restaurant._id });
+    if (!menu) {
+      const error = new Error("Menu not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const item = menu.menuItems.id(itemId);
+    if (!item) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const { itemName, description, price, category, isRecommended, isTopRated, isNew } = req.body;
+    if (itemName) item.itemName = itemName;
+    if (description) item.description = description;
+    if (price) item.price = parseFloat(price);
+    if (category) item.category = category;
+    if (isRecommended !== undefined) item.isRecommended = !!isRecommended;
+    if (isTopRated !== undefined) item.isTopRated = !!isTopRated;
+    if (isNew !== undefined) item.isNew = !!isNew;
+
+    await menu.save();
+    res.status(200).json({ message: "Menu item updated successfully", data: menu.menuItems });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── DELETE /restaurant/menu/:itemId ──────────────────────────────────────────
+export const deleteRestaurantMenuItem = async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findOne({ managerId: req.user._id });
+    if (!restaurant) {
+      const error = new Error("Restaurant profile required first");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const { itemId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+      const error = new Error("Invalid item ID");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const menu = await Menu.findOne({ restaurantId: restaurant._id });
+    if (!menu) {
+      const error = new Error("Menu not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const originalLength = menu.menuItems.length;
+    menu.menuItems = menu.menuItems.filter((item) => item._id.toString() !== itemId);
+
+    if (menu.menuItems.length === originalLength) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    await menu.save();
+    res.status(200).json({ message: "Menu item deleted successfully", data: menu.menuItems });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── PATCH /restaurant/menu/:itemId/toggle ────────────────────────────────────
+export const toggleMenuItemAvailability = async (req, res, next) => {
+  try {
+    const restaurant = await Restaurant.findOne({ managerId: req.user._id });
+    if (!restaurant) {
+      const error = new Error("Restaurant profile required first");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const { itemId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+      const error = new Error("Invalid item ID");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const menu = await Menu.findOne({ restaurantId: restaurant._id });
+    if (!menu) {
+      const error = new Error("Menu not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const item = menu.menuItems.id(itemId);
+    if (!item) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    item.isAvailable = !item.isAvailable;
+    await menu.save();
+    res.status(200).json({
+      message: `Item is now ${item.isAvailable ? "available" : "unavailable"}`,
+      data: menu.menuItems,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── PUT /restaurant/update-address ──────────────────────────────────────────
+export const RestaurantUpdateAddress = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const { address, city, state, pinCode, country, geoLat, geoLon } = req.body;
+
+    let existingRestaurant = await Restaurant.findOne({
+      managerId: currentUser._id,
+    });
+
+    if (!existingRestaurant) {
+      const error = new Error("Restaurant Not Found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    if (address) existingRestaurant.address = address;
+    if (city) existingRestaurant.city = city;
+    if (state) existingRestaurant.state = state;
+    if (pinCode) existingRestaurant.pinCode = pinCode;
+    if (country) existingRestaurant.country = country;
+    if (geoLat || geoLon) {
+      existingRestaurant.geoLocation = {
+        lat: geoLat || existingRestaurant.geoLocation?.lat || "",
+        lon: geoLon || existingRestaurant.geoLocation?.lon || "",
+      };
+    }
+
+    await existingRestaurant.save();
+
+    return res.status(200).json({
+      message: "Restaurant address updated successfully",
+      data: existingRestaurant,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+// ─── PUT /restaurant/update-banking-document ─────────────────────────────────
+export const RestaurantUpdateBankingDocument = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const {
+      legalName,
+      companyType,
+      bankName,
+      accountNumber,
+      ifscCode,
+      panCard,
+      gstCertificate,
+      fssaiCertificate,
+    } = req.body;
+
+    let existingRestaurant = await Restaurant.findOne({
+      managerId: currentUser._id,
+    });
+
+    if (!existingRestaurant) {
+      const error = new Error("Restaurant Not Found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    existingRestaurant.financialDetails = {
+      bankName: bankName || existingRestaurant.financialDetails?.bankName || "",
+      accountNumber: accountNumber || existingRestaurant.financialDetails?.accountNumber || "",
+      ifscCode: ifscCode || existingRestaurant.financialDetails?.ifscCode || "",
+    };
+
+    existingRestaurant.documents = {
+      ...existingRestaurant.documents,
+      legalName: legalName ?? existingRestaurant.documents?.legalName ?? "",
+      companyType: companyType ?? existingRestaurant.documents?.companyType ?? "",
+      panCard: panCard ?? existingRestaurant.documents?.panCard ?? "",
+      gstCertificate: gstCertificate ?? existingRestaurant.documents?.gstCertificate ?? "",
+      fssaiCertificate: fssaiCertificate ?? existingRestaurant.documents?.fssaiCertificate ?? "",
+    };
+
+    await existingRestaurant.save();
+
+    return res.status(200).json({
+      message: "Banking and documents updated successfully",
+      data: existingRestaurant,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+// ─── PUT /restaurant/update-social-links ──────────────────────────────────────
+export const RestaurantUpdateSocialLinks = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const { socialMediaLinks } = req.body;
+
+    if (!Array.isArray(socialMediaLinks)) {
+      const error = new Error("Invalid social media links format");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    let existingRestaurant = await Restaurant.findOne({
+      managerId: currentUser._id,
+    });
+
+    if (!existingRestaurant) {
+      const error = new Error("Restaurant Not Found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    existingRestaurant.socialMediaLinks = socialMediaLinks.map((link) => ({
+      platform: link.platform,
+      url: link.url,
+    }));
+
+    await existingRestaurant.save();
+
+    return res.status(200).json({
+      message: "Social media links updated successfully",
+      data: existingRestaurant,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+

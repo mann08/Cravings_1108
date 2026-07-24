@@ -1,5 +1,5 @@
 import React from "react";
-import { MdDashboard, MdListAlt } from "react-icons/md";
+import { MdDashboard, MdListAlt, MdRestaurantMenu } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
@@ -28,6 +28,7 @@ const RestaurantSidebar = ({ activeTab, setActiveTab }) => {
   const tabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard /> },
     { name: "Orders", value: "orders", icon: <MdListAlt /> },
+    { name: "Menu", value: "menu", icon: <MdRestaurantMenu /> },
     { name: "Settings", value: "settings", icon: <IoMdSettings /> },
   ];
 

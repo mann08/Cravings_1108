@@ -16,7 +16,7 @@ const MenuSchema = mongoose.Schema(
           category: { type: String, required: true },
           image: {
             type: { url: { type: String }, publicId: { type: String } },
-            required: true,
+            required: false,
           },
           isAvailable: { type: Boolean, default: true },
           isTopRated: { type: Boolean, default: false },
