@@ -9,20 +9,23 @@ const MenuSchema = mongoose.Schema(
     },
     menuItems: {
       type: [
-        {
-          itemName: { type: String, required: true },
-          description: { type: String, required: true },
-          price: { type: Number, required: true },
-          category: { type: String, required: true },
-          image: {
-            type: { url: { type: String }, publicId: { type: String } },
-            required: false,
+        new mongoose.Schema(
+          {
+            itemName: { type: String, required: true },
+            description: { type: String, required: true },
+            price: { type: Number, required: true },
+            category: { type: String, required: true },
+            image: {
+              type: { url: { type: String }, publicId: { type: String } },
+              required: false,
+            },
+            isAvailable: { type: Boolean, default: true },
+            isTopRated: { type: Boolean, default: false },
+            isRecommended: { type: Boolean, default: false },
+            isNew: { type: Boolean, default: false },
           },
-          isAvailable: { type: Boolean, default: true },
-          isTopRated: { type: Boolean, default: false },
-          isRecommended: { type: Boolean, default: false },
-          isNew: { type: Boolean, default: false },
-        },
+          { suppressReservedKeysWarning: true }
+        ),
       ],
     },
   },
