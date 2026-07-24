@@ -1,35 +1,13 @@
 import React from "react";
 import { MdDashboard, MdListAlt, MdRestaurantMenu } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
-import { FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import api from "../../config/api.config";
 
 const RestaurantSidebar = ({ activeTab, setActiveTab }) => {
-  const { setUser, setIsLogin, setRole } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      const res = await api.get("/auth/logout");
-      toast.success(res.data.message);
-      sessionStorage.removeItem("cravingUser");
-      setUser(null);
-      setIsLogin(false);
-      setRole(null);
-      navigate("/");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Logout failed");
-    }
-  };
 
   const tabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard /> },
     { name: "Orders", value: "orders", icon: <MdListAlt /> },
     { name: "Menu", value: "menu", icon: <MdRestaurantMenu /> },
-    { name: "Settings", value: "settings", icon: <IoMdSettings /> },
   ];
 
   return (
@@ -58,13 +36,17 @@ const RestaurantSidebar = ({ activeTab, setActiveTab }) => {
       </div>
 
       <div className="border-t border-(--color-base-300) pt-2">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 p-2.5 rounded text-sm text-(--color-error) hover:bg-(--color-error)/15 font-semibold transition-colors duration-200"
+        <li
+          className={`list-none cursor-pointer p-2.5 rounded text-sm flex items-center gap-3 transition-colors duration-200 ${
+            activeTab === "settings"
+              ? "bg-(--color-primary) text-white font-semibold shadow-sm"
+              : "text-(--color-neutral) hover:bg-(--color-base-300) hover:text-(--color-base-content)"
+          }`}
+          onClick={() => setActiveTab("settings")}
         >
-          <FaSignOutAlt className="text-lg" />
-          <span>Logout</span>
-        </button>
+          <span className="text-lg"><IoMdSettings /></span>
+          <span>Settings</span>
+        </li>
       </div>
     </div>
   );
