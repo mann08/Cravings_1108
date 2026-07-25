@@ -46,8 +46,6 @@ function Home() {
       page: "home",
       action: "search",
     };
-
-    console.log("Home payload ready for backend:", payload);
   };
 
   return (

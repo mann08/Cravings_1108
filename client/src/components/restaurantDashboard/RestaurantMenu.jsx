@@ -6,6 +6,7 @@ import { AiTwotoneLike } from "react-icons/ai";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
+import EditOrViewItem from "./menuItems/EditOrViewItem";
 
 const dummyMenu = [
   {
@@ -248,6 +249,39 @@ const RestaurantMenu = () => {
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  // ── Action Handlers ──────────────────────────────────────────────────────
+
+  /** Called when ConfirmModal is confirmed (delete / badge toggles) */
+  const handleConfirm = (item, mode) => {
+    setMenuItems((prev) => {
+      if (mode === "delete") {
+        return prev.filter((m) => m !== item);
+      }
+      const fieldMap = { topRated: "isTopRated", recommended: "isRecommended", new: "isNew" };
+      const field = fieldMap[mode];
+      if (field) {
+        return prev.map((m) => m === item ? { ...m, [field]: !m[field] } : m);
+      }
+      return prev;
+    });
+  };
+
+  /** Called when EditOrViewItem saves changes */
+  const handleSave = (updatedItem) => {
+    setMenuItems((prev) =>
+      prev.map((m) => m === selectedItem ? updatedItem : m)
+    );
+  };
+
+  /** Status dropdown change */
+  const handleStatusChange = (item, newStatus) => {
+    setMenuItems((prev) =>
+      prev.map((m) => m === item ? { ...m, status: newStatus } : m)
+    );
+  };
+
+  // ────────────────────────────────────────────────────────────────────────
+
   const filteredItems = menuItems.filter((item) => {
     const q = searchQuery.toLowerCase();
     return (
@@ -328,9 +362,7 @@ const RestaurantMenu = () => {
                       className={`appearance-none rounded-md pl-3 pr-8 py-1.5 text-xs font-semibold tracking-wide transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-(--color-primary) ${
                         statusChipStyles[item.status]
                       }`}
-                      onChange={(e) => {
-                        // Handle status change logic here
-                      }}
+                      onChange={(e) => handleStatusChange(item, e.target.value)}
                     >
                       <option value="available">
                         {statusLabels.available}
@@ -442,6 +474,7 @@ const RestaurantMenu = () => {
           modalMode={modalMode}
           isOpen={isControlsModalOpen}
           onClose={() => setIsControlsModalOpen(false)}
+          onConfirm={handleConfirm}
         />
       )}
 
@@ -449,6 +482,14 @@ const RestaurantMenu = () => {
         isOpen={isAddNewItemModalOpen}
         onClose={() => setIsAddNewItemModalOpen(false)}
         onAdd={(newItem) => setMenuItems((prev) => [newItem, ...prev])}
+      />
+
+      <EditOrViewItem
+        isOpen={isEditViewItemModalOpen}
+        onClose={() => setIsEditViewItemModalOpen(false)}
+        item={selectedItem}
+        mode={modalMode}
+        onSave={handleSave}
       />
     </>
   );

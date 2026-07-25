@@ -68,8 +68,6 @@ const Register = () => {
       return;
     }
 
-    console.log("Form submitted:", formData);
-
     try {
       const res = await api.post("/auth/register", {
         ...formData,

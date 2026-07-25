@@ -44,7 +44,6 @@ const AdminOrders = () => {
       const activeRiders = res.data.data?.filter((r) => r.profile?.status === "active") || [];
       setRiders(activeRiders);
     } catch (error) {
-      console.log("Riders load error", error);
     }
   };
 

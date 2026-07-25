@@ -23,7 +23,6 @@ const RestaurantSetting = () => {
           setIsRestaurantOpen(res.data.data[0].isOpen || false);
         }
       } catch (err) {
-        console.log(err);
       }
     };
     fetchStatus();
