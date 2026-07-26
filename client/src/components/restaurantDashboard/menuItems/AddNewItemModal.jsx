@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle, LuUpload } from "react-icons/lu";
 import toast from "react-hot-toast";
+import api from "../../../config/api.config";
 
 const defaultForm = {
   itemName: "",
@@ -68,28 +69,26 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
 
     setIsLoading(true);
     try {
-      const newItem = {
+      const payload = {
         itemName: form.itemName.trim(),
         description: form.description.trim(),
         price: parseFloat(form.price),
         category: form.category,
         type: form.type,
-        image: {
-          url: preview || `https://picsum.photos/seed/${Date.now()}/600/600`,
-          publicId: `item-${Date.now()}`,
-        },
         status: form.status,
         isTopRated: form.isTopRated,
         isRecommended: form.isRecommended,
         isNew: form.isNew,
-        isDeleted: false,
       };
 
-      onAdd(newItem);
+      const res = await api.post("/restaurant/menu", payload);
       toast.success("Menu item added successfully!");
+      if (onAdd) {
+        onAdd(res.data.data);
+      }
       handleClose();
     } catch (error) {
-      toast.error("Failed to add item. Please try again.");
+      toast.error(error.response?.data?.message || "Failed to add item. Please try again.");
     } finally {
       setIsLoading(false);
     }

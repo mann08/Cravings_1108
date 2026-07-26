@@ -22,6 +22,17 @@ const Login = () => {
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
     useState(false);
 
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setFormData((prev) => ({
+        ...prev,
+        email: savedEmail,
+        rememberMe: true,
+      }));
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -56,7 +67,17 @@ const Login = () => {
         password: formData.password,
       });
       toast.success(res.data.message);
-      sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
+
+      if (formData.rememberMe) {
+        localStorage.setItem("cravingUser", JSON.stringify(res.data.data));
+        localStorage.setItem("rememberedEmail", formData.email.toLowerCase());
+        sessionStorage.removeItem("cravingUser");
+      } else {
+        sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
+        localStorage.removeItem("cravingUser");
+        localStorage.removeItem("rememberedEmail");
+      }
+
       setUser(res.data.data);
       setIsLogin(true);
       setRole(res.data.data.userType);

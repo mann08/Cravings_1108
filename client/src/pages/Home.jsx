@@ -1,14 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight, FaStar, FaMapMarkerAlt, FaUtensils } from "react-icons/fa";
+import { LuLoaderCircle } from "react-icons/lu";
+import api from "../config/api.config";
 
-import heroImage from "../images/bgImage1-BgVBBcls.jpg";
+import bg1 from "../assets/carousel/bgImage1-BgVBBcls.jpg";
+import bg2 from "../assets/carousel/bgImage2-CSvQeVNX.jpg";
+import bg3 from "../assets/carousel/bgImage3-BTY6Sz_K.jpg";
+import bg4 from "../assets/carousel/bgImage4-L1QELaMd.jpg";
 
-import mangoTree from "../images/undermango tree.avif";
-import rajDarbar from "../images/Rajdarabr.webp";
-import countrySide from "../images/country side coulture.webp";
+const carouselImages = [bg1, bg2, bg3, bg4];
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Auto carousel slide every 2.5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Fetch real restaurants from backend
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get("/public/restaurants");
+        setRestaurants(res.data.data || []);
+      } catch (error) {
+        try {
+          const fallbackRes = await api.get("/customer/restaurants");
+          setRestaurants(fallbackRes.data.data || []);
+        } catch {
+          setRestaurants([]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRestaurants();
+  }, []);
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+  };
 
   const demoMenu = [
     { name: "Paneer Butter Masala", category: "Main Course", price: 280, dietaryType: "Veg" },
@@ -17,130 +62,227 @@ function Home() {
     { name: "Mango Lassi", category: "Beverages", price: 120, dietaryType: "Veg" },
   ];
 
-  const restaurants = [
-    {
-      name: "Under The Mango Tree",
-      image: mangoTree,
-      rating: "4.5",
-      cuisine: "Indian, Chinese, Italian",
-    },
-    {
-      name: "Raj Darbar",
-      image: rajDarbar,
-      rating: "4.8",
-      cuisine: "Indian, Chinese",
-    },
-    {
-      name: "Countryside Culture",
-      image: countrySide,
-      rating: "4.2",
-      cuisine: "Indian",
-    },
-  ];
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    const payload = {
-      searchQuery,
-      page: "home",
-      action: "search",
-    };
-  };
+  const filteredRestaurants = restaurants.filter((r) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      r.restaurantName?.toLowerCase().includes(q) ||
+      r.city?.toLowerCase().includes(q) ||
+      (Array.isArray(r.cuisineTypes) && r.cuisineTypes.some((c) => c.toLowerCase().includes(q)))
+    );
+  });
 
   return (
-    <div className="bg-gray-50">
-      <section
-        className="h-[90vh] bg-cover bg-center flex items-center justify-center text-center text-white relative"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
-        <div className="absolute inset-0 bg-black/60"></div>
+    <div className="bg-gray-50 min-h-screen">
+      {/* ── HERO BANNER WITH AUTOMATIC CAROUSEL ── */}
+      <section className="h-[90vh] relative overflow-hidden flex items-center justify-center text-center text-white">
+        {carouselImages.map((img, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+              idx === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            }`}
+            style={{ backgroundImage: `url(${img})` }}
+          />
+        ))}
 
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/40"></div>
+
+        {/* Carousel Arrow Navigation */}
+        <button
+          onClick={handlePrevSlide}
+          className="absolute left-4 md:left-8 z-20 bg-black/40 hover:bg-orange-600 text-white p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/20"
+          aria-label="Previous Slide"
+        >
+          <FaChevronLeft className="text-xl md:text-2xl" />
+        </button>
+
+        <button
+          onClick={handleNextSlide}
+          className="absolute right-4 md:right-8 z-20 bg-black/40 hover:bg-orange-600 text-white p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/20"
+          aria-label="Next Slide"
+        >
+          <FaChevronRight className="text-xl md:text-2xl" />
+        </button>
+
+        {/* Hero Central Content */}
         <div className="relative z-10 px-4 max-w-5xl">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <span className="inline-block bg-orange-600/90 text-white text-xs md:text-sm uppercase tracking-widest font-semibold px-4 py-1.5 rounded-full mb-4 shadow-md backdrop-blur-sm border border-orange-400/30">
+            Fast & Fresh Delivery
+          </span>
+
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-md leading-tight">
             Your Favorite Food,
             <br />
-            Delivered Fast
+            <span className="text-orange-500">Delivered Fast</span>
           </h1>
 
-          <p className="text-lg md:text-2xl mb-8">
-            Order from thousands of restaurants and get it delivered to your
-            doorstep.
+          <p className="text-lg md:text-2xl mb-8 font-light text-gray-200 drop-shadow-sm max-w-3xl mx-auto">
+            Order from thousands of top-rated restaurants and get hot meals right to your doorstep.
           </p>
 
-          <div className="flex justify-center gap-4 mb-8 flex-wrap">
+          <div className="flex justify-center gap-4 mb-10 flex-wrap">
             <Link
               to="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
+              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-orange-600/40 transition-all duration-300 transform hover:-translate-y-0.5"
             >
               Sign Up
             </Link>
 
             <Link
               to="/login"
-              className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 py-3 rounded-lg transition-colors duration-200"
+              className="bg-white/90 hover:bg-white text-gray-900 font-semibold px-8 py-3.5 rounded-xl shadow-lg transition-all duration-300 backdrop-blur-sm"
             >
               Order Now
             </Link>
           </div>
 
           <form
-            onSubmit={handleSearch}
-            className="max-w-3xl mx-auto bg-white rounded-xl flex items-center px-4 py-3 shadow-xl hover:shadow-2xl transition-shadow"
+            onSubmit={(e) => e.preventDefault()}
+            className="max-w-3xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl flex items-center px-5 py-3.5 shadow-2xl border border-gray-100 hover:shadow-orange-500/10 transition-shadow"
           >
-            <span className="text-gray-500 text-xl mr-3">🔍</span>
+            <span className="text-orange-600 text-2xl mr-3">🔍</span>
 
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search restaurants or dishes..."
-              className="w-full outline-none text-gray-700 placeholder-gray-400"
+              placeholder="Search restaurants, cuisines, or cities..."
+              className="w-full outline-none text-gray-800 text-base placeholder-gray-400 bg-transparent font-medium"
               aria-label="Search restaurants or dishes"
             />
           </form>
         </div>
-      </section>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-3">
-          Featured Restaurants
-        </h2>
-
-        <p className="text-center text-gray-500 mb-12">
-          Discover amazing restaurants near you
-        </p>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {restaurants.map((restaurant, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:-translate-y-2 transition duration-300"
-            >
-              <img
-                src={restaurant.image}
-                alt={restaurant.name}
-                className="h-60 w-full object-cover"
-              />
-
-              <div className="p-5">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-bold text-xl">{restaurant.name}</h3>
-
-                  <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                    ⭐ {restaurant.rating}
-                  </span>
-                </div>
-
-                <p className="text-gray-600">{restaurant.cuisine}</p>
-
-                <button className="w-full mt-5 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium">
-                  Explore Menu
-                </button>
-              </div>
-            </div>
+        {/* Carousel Bottom Dots Indicator */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2.5">
+          {carouselImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                idx === currentSlide
+                  ? "w-8 bg-orange-500 shadow-md"
+                  : "w-2.5 bg-white/50 hover:bg-white"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
           ))}
         </div>
+      </section>
+
+      {/* ── FEATURED RESTAURANTS SECTION ── */}
+      <section className="py-16 px-6 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span className="text-orange-600 font-bold uppercase tracking-wider text-xs block mb-1">
+              Top Partners
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+              Featured Restaurants
+            </h2>
+          </div>
+          <p className="text-gray-500 text-base mt-2 md:mt-0">
+            Real restaurants available on Cravings
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center py-20 text-orange-600 gap-3">
+            <LuLoaderCircle className="animate-spin text-3xl" />
+            <span className="font-semibold text-lg">Fetching top restaurants...</span>
+          </div>
+        ) : filteredRestaurants.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100 max-w-2xl mx-auto">
+            <FaUtensils className="text-5xl text-orange-400 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">No Restaurants Available</h3>
+            <p className="text-gray-500 mb-6">
+              {searchQuery
+                ? `No restaurants match "${searchQuery}". Try a different search term!`
+                : "No restaurants have registered yet. Be the first restaurant partner to join!"}
+            </p>
+            <Link
+              to="/register"
+              className="inline-block bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-md"
+            >
+              Register Your Restaurant
+            </Link>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredRestaurants.map((restaurant) => {
+              const coverImg =
+                restaurant.coverImage?.url ||
+                (restaurant.restaurantImage?.length ? restaurant.restaurantImage[0].url : null) ||
+                `https://picsum.photos/seed/${restaurant._id}/600/400`;
+
+              return (
+                <div
+                  key={restaurant._id}
+                  className="bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 border border-gray-100 group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative h-56 overflow-hidden">
+                      <img
+                        src={coverImg}
+                        alt={restaurant.restaurantName}
+                        className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
+                      />
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 text-green-700">
+                        <FaStar className="text-amber-400 text-xs" />
+                        <span>{restaurant.averageRating ? restaurant.averageRating.toFixed(1) : "New"}</span>
+                      </div>
+                      {restaurant.isOpen !== undefined && (
+                        <div
+                          className={`absolute top-4 left-4 text-xs font-bold px-3 py-1 rounded-full text-white backdrop-blur-md shadow-md ${
+                            restaurant.isOpen ? "bg-green-600/90" : "bg-red-600/90"
+                          }`}
+                        >
+                          {restaurant.isOpen ? "Open Now" : "Closed"}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-6">
+                      <h3 className="font-bold text-xl text-gray-900 group-hover:text-orange-600 transition-colors mb-2">
+                        {restaurant.restaurantName}
+                      </h3>
+
+                      <div className="flex items-center gap-2 text-gray-500 text-xs mb-3">
+                        <FaMapMarkerAlt className="text-orange-500" />
+                        <span>
+                          {restaurant.address ? `${restaurant.address}, ` : ""}
+                          {restaurant.city || "Location available"}
+                        </span>
+                      </div>
+
+                      {Array.isArray(restaurant.cuisineTypes) && restaurant.cuisineTypes.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {restaurant.cuisineTypes.map((c, i) => (
+                            <span
+                              key={i}
+                              className="bg-orange-50 text-orange-700 text-xs font-medium px-2.5 py-1 rounded-md border border-orange-200/60"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="px-6 pb-6">
+                    <Link
+                      to="/login"
+                      className="w-full text-center block bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl transition-all duration-200 font-semibold shadow-md hover:shadow-orange-500/20"
+                    >
+                      Explore Menu
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="bg-orange-50 py-16 px-6">

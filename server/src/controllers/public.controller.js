@@ -1,4 +1,5 @@
 import Contact from "../models/contact.model.js";
+import Restaurant from "../models/restaurant.model.js";
 
 export const ContactUsForm = async (req, res, next) => {
   try {
@@ -20,6 +21,25 @@ export const ContactUsForm = async (req, res, next) => {
 
     return res.status(201).json({
       message: "Contact form submitted successfully",
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const getPublicRestaurants = async (req, res, next) => {
+  try {
+    const restaurants = await Restaurant.find({ status: { $ne: "blocked" } })
+      .select(
+        "restaurantName coverImage restaurantImage cuisineTypes restaurantType averageRating city address isOpen description status"
+      )
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      message: "Restaurants fetched successfully",
+      data: restaurants,
     });
   } catch (error) {
     console.log(error.message);

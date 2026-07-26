@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle, LuUpload } from "react-icons/lu";
 import toast from "react-hot-toast";
+import api from "../../../config/api.config";
 
 const CATEGORIES = [
   "Pizza", "Burger", "Wrap", "Dessert", "Beverages",
@@ -63,17 +64,26 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
 
     setIsLoading(true);
     try {
-      const updated = {
-        ...form,
+      const payload = {
         itemName: form.itemName.trim(),
         description: form.description?.trim() || "",
         price: parseFloat(form.price),
+        category: form.category,
+        type: form.type,
+        status: form.status,
+        isTopRated: form.isTopRated,
+        isRecommended: form.isRecommended,
+        isNew: form.isNew,
       };
-      onSave(updated);
+
+      const res = await api.put(`/restaurant/menu/${form._id}`, payload);
       toast.success("Menu item updated successfully!");
+      if (onSave) {
+        onSave(res.data.data);
+      }
       handleClose();
-    } catch {
-      toast.error("Failed to update item. Please try again.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update item. Please try again.");
     } finally {
       setIsLoading(false);
     }

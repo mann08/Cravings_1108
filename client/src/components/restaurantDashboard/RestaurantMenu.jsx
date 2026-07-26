@@ -1,231 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaAward, FaRegGrinStars } from "react-icons/fa";
 import { BiSolidDish } from "react-icons/bi";
-import { LuPencilLine, LuTrash2, LuEye, LuChevronDown } from "react-icons/lu";
+import { LuPencilLine, LuTrash2, LuEye, LuChevronDown, LuLoaderCircle } from "react-icons/lu";
 import { AiTwotoneLike } from "react-icons/ai";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import toast from "react-hot-toast";
+import api from "../../config/api.config";
 import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
 import EditOrViewItem from "./menuItems/EditOrViewItem";
-
-const dummyMenu = [
-  {
-    itemName: "Classic Margherita Pizza",
-    description: "Fresh mozzarella, tomato sauce, basil leaves, and oregano.",
-    price: 299,
-    category: "Pizza",
-    type: "Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&h=600&fit=crop",
-      publicId: "dummy-pizza-1",
-    },
-    status: "available",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Crispy Veg Burger",
-    description:
-      "Loaded with crispy vegetable patty, lettuce, cheese, and mayo.",
-    price: 179,
-    category: "Burger",
-    type: "Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=600&fit=crop",
-      publicId: "dummy-burger-1",
-    },
-    status: "available",
-    isTopRated: false,
-    isRecommended: true,
-    isNew: true,
-    isDeleted: false,
-  },
-  {
-    itemName: "Paneer Tikka Wrap",
-    description:
-      "Soft tortilla stuffed with spicy paneer tikka and fresh veggies.",
-    price: 229,
-    category: "Wrap",
-    type: "Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=600&fit=crop",
-      publicId: "dummy-wrap-1",
-    },
-    status: "unavailable",
-    isTopRated: true,
-    isRecommended: false,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Chocolate Brownie Sundae",
-    description: "Warm chocolate brownie served with vanilla ice cream.",
-    price: 199,
-    category: "Dessert",
-    type: "Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&h=600&fit=crop",
-      publicId: "dummy-dessert-1",
-    },
-    status: "available",
-    isTopRated: false,
-    isRecommended: true,
-    isNew: true,
-    isDeleted: false,
-  },
-  {
-    itemName: "Cold Coffee Delight",
-    description: "Refreshing chilled coffee topped with whipped cream.",
-    price: 149,
-    category: "Beverages",
-    type: "Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=600&fit=crop",
-      publicId: "dummy-coffee-1",
-    },
-    status: "discontinued",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Chicken Tikka Pizza",
-    description:
-      "Stone-baked pizza topped with spicy chicken tikka and mozzarella.",
-    price: 399,
-    category: "Pizza",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop",
-      publicId: "dummy-chicken-pizza",
-    },
-    status: "available",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Grilled Chicken Burger",
-    description:
-      "Juicy grilled chicken patty with lettuce, cheese, and smoky sauce.",
-    price: 279,
-    category: "Burger",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&h=600&fit=crop",
-      publicId: "dummy-chicken-burger",
-    },
-    status: "available",
-    isTopRated: true,
-    isRecommended: false,
-    isNew: true,
-    isDeleted: false,
-  },
-  {
-    itemName: "Butter Chicken",
-    description: "Tender chicken cooked in a rich, creamy tomato gravy.",
-    price: 429,
-    category: "Main Course",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=600&fit=crop",
-      publicId: "dummy-butter-chicken",
-    },
-    status: "unavailable",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Chicken Biryani",
-    description:
-      "Fragrant basmati rice cooked with marinated chicken and aromatic spices.",
-    price: 349,
-    category: "Biryani",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600&h=600&fit=crop",
-      publicId: "dummy-chicken-biryani",
-    },
-    status: "available",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: true,
-    isDeleted: false,
-  },
-  {
-    itemName: "Fish & Chips",
-    description:
-      "Crispy battered fish fillet served with golden fries and tartar sauce.",
-    price: 379,
-    category: "Seafood",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1579208575657-c595a05383b7?w=600&h=600&fit=crop",
-      publicId: "dummy-fish-chips",
-    },
-    status: "available",
-    isTopRated: false,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Prawn Fried Rice",
-    description:
-      "Wok-tossed fried rice with juicy prawns, vegetables, and soy sauce.",
-    price: 389,
-    category: "Rice",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=600&fit=crop",
-      publicId: "dummy-prawn-rice",
-    },
-    status: "discontinued",
-    isTopRated: false,
-    isRecommended: false,
-    isNew: true,
-    isDeleted: false,
-  },
-  {
-    itemName: "Chicken Shawarma Wrap",
-    description:
-      "Grilled chicken wrapped with fresh veggies, garlic sauce, and pita bread.",
-    price: 249,
-    category: "Wrap",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&h=600&fit=crop",
-      publicId: "dummy-shawarma-wrap",
-    },
-    status: "available",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-  {
-    itemName: "Spicy Chicken Wings",
-    description: "Crispy chicken wings tossed in a fiery hot sauce.",
-    price: 299,
-    category: "Starter",
-    type: "Non-Vegetarian",
-    image: {
-      url: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=600&h=600&fit=crop",
-      publicId: "dummy-chicken-wings",
-    },
-    status: "unavailable",
-    isTopRated: true,
-    isRecommended: true,
-    isNew: false,
-    isDeleted: false,
-  },
-];
 
 const statusChipStyles = {
   available: "bg-green-100 text-green-700 border border-green-300",
@@ -240,8 +23,9 @@ const statusLabels = {
 };
 
 const RestaurantMenu = () => {
-  const [menuItems, setMenuItems] = useState(dummyMenu);
+  const [menuItems, setMenuItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [fetching, setFetching] = useState(true);
 
   const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);
   const [isEditViewItemModalOpen, setIsEditViewItemModalOpen] = useState(false);
@@ -249,35 +33,78 @@ const RestaurantMenu = () => {
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const fetchMenu = async () => {
+    setFetching(true);
+    try {
+      const res = await api.get("/restaurant/menu");
+      setMenuItems(res.data.data || []);
+    } catch (error) {
+      toast.error("Failed to load menu items");
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
   // ── Action Handlers ──────────────────────────────────────────────────────
 
   /** Called when ConfirmModal is confirmed (delete / badge toggles) */
-  const handleConfirm = (item, mode) => {
-    setMenuItems((prev) => {
+  const handleConfirm = async (item, mode) => {
+    try {
       if (mode === "delete") {
-        return prev.filter((m) => m !== item);
+        await api.delete(`/restaurant/menu/${item._id}`);
+        toast.success("Menu item deleted successfully!");
+        setMenuItems((prev) => prev.filter((m) => m._id !== item._id));
+        return;
       }
       const fieldMap = { topRated: "isTopRated", recommended: "isRecommended", new: "isNew" };
       const field = fieldMap[mode];
       if (field) {
-        return prev.map((m) => m === item ? { ...m, [field]: !m[field] } : m);
+        const updatedValue = !item[field];
+        const res = await api.put(`/restaurant/menu/${item._id}`, {
+          [field]: updatedValue,
+        });
+        toast.success("Item updated!");
+        if (res.data?.data) {
+          setMenuItems(res.data.data);
+        } else {
+          setMenuItems((prev) =>
+            prev.map((m) => (m._id === item._id ? { ...m, [field]: updatedValue } : m))
+          );
+        }
       }
-      return prev;
-    });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to perform action");
+    }
   };
 
-  /** Called when EditOrViewItem saves changes */
-  const handleSave = (updatedItem) => {
-    setMenuItems((prev) =>
-      prev.map((m) => m === selectedItem ? updatedItem : m)
-    );
+  /** Called when EditOrViewItem saves changes or AddNewItem adds item */
+  const handleSave = (updatedData) => {
+    if (Array.isArray(updatedData)) {
+      setMenuItems(updatedData);
+    } else {
+      fetchMenu();
+    }
   };
 
   /** Status dropdown change */
-  const handleStatusChange = (item, newStatus) => {
-    setMenuItems((prev) =>
-      prev.map((m) => m === item ? { ...m, status: newStatus } : m)
-    );
+  const handleStatusChange = async (item, newStatus) => {
+    try {
+      const res = await api.put(`/restaurant/menu/${item._id}`, { status: newStatus });
+      toast.success(`Status updated to ${newStatus}`);
+      if (res.data?.data) {
+        setMenuItems(res.data.data);
+      } else {
+        setMenuItems((prev) =>
+          prev.map((m) => (m._id === item._id ? { ...m, status: newStatus } : m))
+        );
+      }
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
   };
 
   // ────────────────────────────────────────────────────────────────────────
@@ -325,31 +152,36 @@ const RestaurantMenu = () => {
             <div>Actions</div>
           </div>
           <div className="overflow-y-auto max-h-[65vh]">
-            {filteredItems.length === 0 && (
-              <div className="text-center text-gray-400 py-10">
-                No items found for &ldquo;{searchQuery}&rdquo;
+            {fetching ? (
+              <div className="flex justify-center items-center py-12 text-(--color-primary) gap-2">
+                <LuLoaderCircle className="animate-spin text-2xl" />
+                <span>Loading Menu Items...</span>
               </div>
-            )}
-            {filteredItems.map((item, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
-              >
-                <div className="col-span-2 flex items-center gap-4">
-                  <div>
-                    <img
-                      src={item.image.url}
-                      alt={item.itemName}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  </div>
-                  <div className="w-full">
-                    <div>{item.itemName}</div>
-                    <div className="text-xs text-gray-500">
-                      {item.description}
+            ) : filteredItems.length === 0 ? (
+              <div className="text-center text-gray-400 py-10">
+                {searchQuery ? `No items found for "${searchQuery}"` : "No menu items added yet. Click 'Add New Item' to start!"}
+              </div>
+            ) : (
+              filteredItems.map((item, index) => (
+                <div
+                  key={item._id || index}
+                  className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
+                >
+                  <div className="col-span-2 flex items-center gap-4">
+                    <div>
+                      <img
+                        src={item.image?.url || `https://placehold.co/100x100?text=${encodeURIComponent(item.itemName)}`}
+                        alt={item.itemName}
+                        className="w-16 h-16 object-cover rounded shadow-sm"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <div className="font-semibold">{item.itemName}</div>
+                      <div className="text-xs text-gray-500 line-clamp-2">
+                        {item.description}
+                      </div>
                     </div>
                   </div>
-                </div>
                 <div className="text-center">₹ {item.price.toFixed(2)}</div>
                 <div className="">
                   <div>{item.category}</div>
@@ -463,7 +295,7 @@ const RestaurantMenu = () => {
                   </button>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>
