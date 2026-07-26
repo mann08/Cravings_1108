@@ -55,13 +55,6 @@ function Home() {
     setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
   };
 
-  const demoMenu = [
-    { name: "Paneer Butter Masala", category: "Main Course", price: 280, dietaryType: "Veg" },
-    { name: "Margherita Pizza", category: "Italian", price: 320, dietaryType: "Veg" },
-    { name: "Chicken Biryani", category: "Rice & Biryani", price: 360, dietaryType: "Non-Veg" },
-    { name: "Mango Lassi", category: "Beverages", price: 120, dietaryType: "Veg" },
-  ];
-
   const filteredRestaurants = restaurants.filter((r) => {
     const q = searchQuery.toLowerCase();
     return (
@@ -283,40 +276,6 @@ function Home() {
             })}
           </div>
         )}
-      </section>
-
-      <section className="bg-orange-50 py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-8">
-            <div>
-              <p className="text-orange-600 font-semibold uppercase tracking-wide text-sm">Demo Menu</p>
-              <h2 className="text-4xl font-bold">Popular Cravings</h2>
-            </div>
-            <p className="text-gray-500 max-w-md">A preview of the dishes customers can discover and order from partner restaurants.</p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {demoMenu.map((item) => (
-              <article key={item.name} className="bg-white rounded-xl shadow-md overflow-hidden">
-                <img
-                  src={`https://placehold.co/600x360/F97316/ffffff?text=${encodeURIComponent(item.name)}`}
-                  alt={item.name}
-                  className="h-40 w-full object-cover"
-                />
-                <div className="p-4">
-                  <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-lg leading-tight">{item.name}</h3>
-                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${item.dietaryType === "Veg" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                      {item.dietaryType}
-                    </span>
-                  </div>
-                  <p className="text-gray-500 text-sm mt-2">{item.category}</p>
-                  <p className="text-orange-600 font-bold mt-3">₹{item.price}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
       </section>
 
       <section className="bg-white py-16">
