@@ -319,21 +319,21 @@ function Home() {
               <p className="text-gray-600 mb-4">
                 Amazing service and super fast delivery. Highly recommended.
               </p>
-              <h4 className="font-bold">Rahul Sharma</h4>
+              <h4 className="font-bold">Khushi Kumari</h4>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md">
               <p className="text-gray-600 mb-4">
                 Great variety of restaurants and easy ordering experience.
               </p>
-              <h4 className="font-bold">Priya Patel</h4>
+              <h4 className="font-bold">Mann Verma</h4>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-md">
               <p className="text-gray-600 mb-4">
                 Food arrived hot and fresh. Loved the experience.
               </p>
-              <h4 className="font-bold">Aman Verma</h4>
+              <h4 className="font-bold">Mahi</h4>
             </div>
           </div>
         </div>
