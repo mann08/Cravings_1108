@@ -17,11 +17,11 @@ function Home() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Auto carousel slide every 2.5 seconds
+  // Auto carousel slide every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    }, 2500);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -67,7 +67,7 @@ function Home() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* ── HERO BANNER WITH AUTOMATIC CAROUSEL ── */}
-      <section className="h-[90vh] relative overflow-hidden flex items-center justify-center text-center text-white">
+      <section className="h-[90vh] relative overflow-hidden flex items-center justify-center text-center text-white px-4">
         {carouselImages.map((img, idx) => (
           <div
             key={idx}
@@ -78,52 +78,49 @@ function Home() {
           />
         ))}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/40"></div>
+        {/* Subtle Dark Overlay */}
+        <div className="absolute inset-0 bg-black/55"></div>
 
         {/* Carousel Arrow Navigation */}
         <button
           onClick={handlePrevSlide}
-          className="absolute left-4 md:left-8 z-20 bg-black/40 hover:bg-orange-600 text-white p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/20"
+          className="absolute left-3 md:left-6 z-20 w-10 h-10 md:w-12 md:h-12 bg-black/35 hover:bg-black/60 text-white rounded-full flex items-center justify-center backdrop-blur-xs transition-all shadow-md cursor-pointer"
           aria-label="Previous Slide"
         >
-          <FaChevronLeft className="text-xl md:text-2xl" />
+          <FaChevronLeft className="text-lg md:text-xl" />
         </button>
 
         <button
           onClick={handleNextSlide}
-          className="absolute right-4 md:right-8 z-20 bg-black/40 hover:bg-orange-600 text-white p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/20"
+          className="absolute right-3 md:right-6 z-20 w-10 h-10 md:w-12 md:h-12 bg-black/35 hover:bg-black/60 text-white rounded-full flex items-center justify-center backdrop-blur-xs transition-all shadow-md cursor-pointer"
           aria-label="Next Slide"
         >
-          <FaChevronRight className="text-xl md:text-2xl" />
+          <FaChevronRight className="text-lg md:text-xl" />
         </button>
 
         {/* Hero Central Content */}
-        <div className="relative z-10 px-4 max-w-5xl">
-          <span className="inline-block bg-orange-600/90 text-white text-xs md:text-sm uppercase tracking-widest font-semibold px-4 py-1.5 rounded-full mb-4 shadow-md backdrop-blur-sm border border-orange-400/30">
-            Fast & Fresh Delivery
-          </span>
-
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-md leading-tight">
+        <div className="relative z-10 w-full max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 text-white leading-tight drop-shadow-md">
             Your Favorite Food,
             <br />
-            <span className="text-orange-500">Delivered Fast</span>
+            Delivered Fast
           </h1>
 
-          <p className="text-lg md:text-2xl mb-8 font-light text-gray-200 drop-shadow-sm max-w-3xl mx-auto">
-            Order from thousands of top-rated restaurants and get hot meals right to your doorstep.
+          <p className="text-base sm:text-lg md:text-xl mb-8 text-gray-100 font-normal max-w-2xl mx-auto drop-shadow-sm">
+            Order from thousands of restaurants and get it delivered to your doorstep.
           </p>
 
-          <div className="flex justify-center gap-4 mb-10 flex-wrap">
+          <div className="flex justify-center items-center gap-4 mb-10 flex-wrap">
             <Link
               to="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg hover:shadow-orange-600/40 transition-all duration-300 transform hover:-translate-y-0.5"
+              className="bg-[#c84511] hover:bg-[#b03a0d] text-white font-bold px-8 py-3 rounded-lg shadow-md transition-colors duration-200"
             >
               Sign Up
             </Link>
 
             <Link
               to="/login"
-              className="bg-white/90 hover:bg-white text-gray-900 font-semibold px-8 py-3.5 rounded-xl shadow-lg transition-all duration-300 backdrop-blur-sm"
+              className="bg-[#fffdfa] hover:bg-white text-gray-900 font-bold px-8 py-3 rounded-lg shadow-md transition-colors duration-200"
             >
               Order Now
             </Link>
@@ -131,31 +128,31 @@ function Home() {
 
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="max-w-3xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl flex items-center px-5 py-3.5 shadow-2xl border border-gray-100 hover:shadow-orange-500/10 transition-shadow"
+            className="w-full max-w-3xl mx-auto bg-[#fffbf7] rounded-xl flex items-center px-4 py-3 shadow-lg border border-[#ffdccb]/60 transition-shadow"
           >
-            <span className="text-orange-600 text-2xl mr-3">🔍</span>
+            <span className="text-gray-700 text-lg mr-3 pl-1">🔍</span>
 
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search restaurants, cuisines, or cities..."
-              className="w-full outline-none text-gray-800 text-base placeholder-gray-400 bg-transparent font-medium"
+              placeholder="Search restaurants or dishes..."
+              className="w-full outline-none text-gray-800 text-base placeholder-[#d88863] bg-transparent"
               aria-label="Search restaurants or dishes"
             />
           </form>
         </div>
 
         {/* Carousel Bottom Dots Indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2.5">
+        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-20 flex items-center gap-2">
           {carouselImages.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
+              className={`transition-all duration-300 rounded-full ${
                 idx === currentSlide
-                  ? "w-8 bg-orange-500 shadow-md"
-                  : "w-2.5 bg-white/50 hover:bg-white"
+                  ? "w-8 h-2 bg-white shadow-sm"
+                  : "w-2 h-2 bg-white/50 hover:bg-white/80"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
