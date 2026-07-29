@@ -275,62 +275,127 @@ function Home() {
         )}
       </section>
 
-      <section className="bg-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-center text-4xl font-bold mb-12">
-            Cravings By The Numbers
+       {/* ── CRAVINGS BY THE NUMBERS SECTION ── */}
+      <section className="bg-[#fff8f0] py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-center text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+            Cravings by the Numbers
           </h2>
+          <p className="text-center text-gray-600 mb-12 text-sm md:text-base">
+            See why millions trust us for their daily food delivery needs
+          </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white shadow-lg rounded-xl p-6 text-center">
-              <h3 className="text-4xl font-bold text-orange-600">2.5M+</h3>
-              <p>Successful Deliveries</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md border border-gray-100/80 hover:shadow-lg transition-all">
+              <h3 className="text-4xl font-extrabold text-[#c84511]">2.5M+</h3>
+              <h4 className="font-bold text-gray-900 text-base mt-3">Successful Deliveries</h4>
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                Orders delivered with care and precision
+              </p>
             </div>
 
-            <div className="bg-white shadow-lg rounded-xl p-6 text-center">
-              <h3 className="text-4xl font-bold text-pink-500">500K+</h3>
-              <p>Happy Customers</p>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md border border-gray-100/80 hover:shadow-lg transition-all">
+              <h3 className="text-4xl font-extrabold text-[#d84e91]">500K+</h3>
+              <h4 className="font-bold text-gray-900 text-base mt-3">Happy Customers</h4>
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                Satisfied users enjoying delicious food
+              </p>
             </div>
 
-            <div className="bg-white shadow-lg rounded-xl p-6 text-center">
-              <h3 className="text-4xl font-bold text-orange-600">5K+</h3>
-              <p>Partner Restaurants</p>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md border border-gray-100/80 hover:shadow-lg transition-all">
+              <h3 className="text-4xl font-extrabold text-[#c84511]">5K+</h3>
+              <h4 className="font-bold text-gray-900 text-base mt-3">Partner Restaurants</h4>
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                Restaurants serving amazing cuisine
+              </p>
             </div>
 
-            <div className="bg-white shadow-lg rounded-xl p-6 text-center">
-              <h3 className="text-4xl font-bold text-pink-500">1K+</h3>
-              <p>Delivery Partners</p>
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md border border-gray-100/80 hover:shadow-lg transition-all">
+              <h3 className="text-4xl font-extrabold text-[#d84e91]">1K+</h3>
+              <h4 className="font-bold text-gray-900 text-base mt-3">Active Delivery Partners</h4>
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                Riders ensuring quick and safe delivery
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-orange-50 py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-center text-4xl font-bold mb-12">
+      {/* ── WHAT OUR CUSTOMERS SAY SECTION ── */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-center text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
             What Our Customers Say
           </h2>
+          <p className="text-center text-gray-600 mb-12 text-sm md:text-base">
+            Real feedback from real food lovers
+          </p>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <p className="text-gray-600 mb-4">
-                Amazing service and super fast delivery. Highly recommended.
-              </p>
-              <h4 className="font-bold">Khushi Kumari</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Review 1 */}
+            <div className="bg-[#fff8f0] p-7 rounded-2xl shadow-sm border border-[#ffe0cc]/40 hover:shadow-md transition-all flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 text-amber-400 text-lg mb-3">
+                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+                </div>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">Amazing Service!</h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                  &ldquo;The food arrived hot and fresh. The delivery was incredibly fast. Highly impressed with Cravings&apos; service!&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#c84511] text-white font-bold flex items-center justify-center text-sm shadow-xs">
+                  KK
+                </div>
+                <div>
+                  <span className="font-bold text-gray-900 text-sm block">Khushi Kumari</span>
+                  <span className="text-xs text-gray-500 block">Verified Buyer</span>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <p className="text-gray-600 mb-4">
-                Great variety of restaurants and easy ordering experience.
-              </p>
-              <h4 className="font-bold">Mann Verma</h4>
+            {/* Review 2 */}
+            <div className="bg-[#fff8f0] p-7 rounded-2xl shadow-sm border border-[#ffe0cc]/40 hover:shadow-md transition-all flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 text-amber-400 text-lg mb-3">
+                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+                </div>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">Best App Ever!</h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                  &ldquo;Easy to use interface, wide variety of restaurants, and quick delivery. I order from Cravings every week!&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#d84e91] text-white font-bold flex items-center justify-center text-sm shadow-xs">
+                  MV
+                </div>
+                <div>
+                  <span className="font-bold text-gray-900 text-sm block">Mann Verma</span>
+                  <span className="text-xs text-gray-500 block">Verified Buyer</span>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <p className="text-gray-600 mb-4">
-                Food arrived hot and fresh. Loved the experience.
-              </p>
-              <h4 className="font-bold">Mahi</h4>
+            {/* Review 3 */}
+            <div className="bg-[#fff8f0] p-7 rounded-2xl shadow-sm border border-[#ffe0cc]/40 hover:shadow-md transition-all flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 text-amber-400 text-lg mb-3">
+                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+                </div>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">Excellent Choices</h3>
+                <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                  &ldquo;Love the variety of restaurants available. Found my new favorite spot through Cravings. Definitely worth it!&rdquo;
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#c84511] text-white font-bold flex items-center justify-center text-sm shadow-xs">
+                  MK
+                </div>
+                <div>
+                  <span className="font-bold text-gray-900 text-sm block">Mahi</span>
+                  <span className="text-xs text-gray-500 block">Verified Buyer</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
