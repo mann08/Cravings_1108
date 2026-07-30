@@ -81,7 +81,6 @@ export const getRiderDashboard = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -109,7 +108,6 @@ export const toggleAvailability = async (req, res, next) => {
       data: { isAvailable: riderDoc.isAvailable },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -134,7 +132,6 @@ export const getDeliveryRequests = async (req, res, next) => {
 
     res.status(200).json({ message: "Delivery requests fetched", data: requests });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -171,7 +168,6 @@ export const acceptDelivery = async (req, res, next) => {
 
     res.status(200).json({ message: "Delivery accepted", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -189,7 +185,6 @@ export const rejectDelivery = async (req, res, next) => {
     }
     res.status(200).json({ message: "Delivery request rejected" });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -215,7 +210,6 @@ export const getCurrentOrder = async (req, res, next) => {
 
     res.status(200).json({ message: "Current order fetched", data: order || null });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -269,7 +263,6 @@ export const updateDeliveryStatus = async (req, res, next) => {
     await order.save();
     res.status(200).json({ message: `Status updated to "${nextStatus}"`, data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -301,7 +294,6 @@ export const getDeliveryHistory = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -334,7 +326,6 @@ export const getRiderEarnings = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -360,7 +351,6 @@ export const updateRiderLocation = async (req, res, next) => {
     await riderDoc.save();
     res.status(200).json({ message: "Location updated" });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -388,7 +378,6 @@ export const updateRiderProfile = async (req, res, next) => {
     await riderDoc.save();
     res.status(200).json({ message: "Profile updated", data: riderDoc });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

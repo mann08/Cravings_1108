@@ -7,8 +7,6 @@ export const EditUserProfile = async (req, res, next) => {
     const { email, fullName, phone } = req.body;
     const newPhoto = req.file;
 
-    console.log("Req Body :", req.body);
-    console.log("Req File :", req.file);
     if (!email || !fullName || !phone) {
       const error = new Error("All fields Required");
       error.statusCode = 400;
@@ -28,7 +26,6 @@ export const EditUserProfile = async (req, res, next) => {
 
       const b64 = Buffer.from(newPhoto.buffer).toString("base64");
       const dataURI = `data:${newPhoto.mimetype};base64,${b64}`;
-      // console.log(dataURI.slice(0, 100));
 
       const result = await cloudinary.uploader.upload(dataURI, {
         folder: "Cravings678/profile",
@@ -37,7 +34,6 @@ export const EditUserProfile = async (req, res, next) => {
         crop: "fill",
       });
 
-      console.log(result);
       existingUser.photo.url = result.secure_url;
       existingUser.photo.publicId = result.public_id;
     }
@@ -51,7 +47,6 @@ export const EditUserProfile = async (req, res, next) => {
       .status(200)
       .json({ message: "User Updated Sucessfully", data: existingUser });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -93,7 +88,6 @@ export const UpdateUserPassword = async (req, res, next) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

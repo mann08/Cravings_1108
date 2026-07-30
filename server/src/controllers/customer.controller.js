@@ -60,7 +60,6 @@ export const getCustomerDashboard = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -111,7 +110,6 @@ export const getCustomerOrders = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -165,7 +163,6 @@ export const getCustomerOrderById = async (req, res, next) => {
 
     res.status(200).json({ message: "Order fetched", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -200,7 +197,6 @@ export const cancelCustomerOrder = async (req, res, next) => {
 
     res.status(200).json({ message: "Order cancelled successfully", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -253,7 +249,6 @@ export const reviewOrder = async (req, res, next) => {
 
     res.status(200).json({ message: "Review submitted", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -264,7 +259,6 @@ export const getAddresses = async (req, res, next) => {
     const customerDoc = await getCustomerDoc(req.user._id);
     res.status(200).json({ message: "Addresses fetched", data: customerDoc.addressBook || [] });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -297,7 +291,6 @@ export const addAddress = async (req, res, next) => {
 
     res.status(201).json({ message: "Address added", data: customerDoc.addressBook });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -335,7 +328,6 @@ export const updateAddress = async (req, res, next) => {
     await customerDoc.save();
     res.status(200).json({ message: "Address updated", data: customerDoc.addressBook });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -358,7 +350,6 @@ export const deleteAddress = async (req, res, next) => {
     await customerDoc.save();
     res.status(200).json({ message: "Address deleted", data: customerDoc.addressBook });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -391,7 +382,6 @@ export const getFavourites = async (req, res, next) => {
 
     res.status(200).json({ message: "Favourites fetched", data: favouriteItems });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -417,7 +407,6 @@ export const addFavourite = async (req, res, next) => {
 
     res.status(200).json({ message: "Added to favourites" });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -440,7 +429,6 @@ export const removeFavourite = async (req, res, next) => {
     await customerDoc.save();
     res.status(200).json({ message: "Removed from favourites" });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -455,7 +443,6 @@ export const getPublicRestaurants = async (req, res, next) => {
 
     res.status(200).json({ message: "Restaurants fetched", data: restaurants });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -480,7 +467,6 @@ export const getRestaurantPublicMenu = async (req, res, next) => {
       data: { restaurant, menuItems: menu ? menu.menuItems.filter(i => i.isAvailable) : [] },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -578,7 +564,6 @@ export const placeOrder = async (req, res, next) => {
 
     res.status(201).json({ message: "Order placed successfully", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

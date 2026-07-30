@@ -73,7 +73,6 @@ export const RestaurantGetData = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -149,7 +148,6 @@ export const RestaurantUpdateProfile = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -547,7 +545,6 @@ export const RestaurantUpdateAddress = async (req, res, next) => {
       data: existingRestaurant,
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -599,7 +596,6 @@ export const RestaurantUpdateBankingDocument = async (req, res, next) => {
       data: existingRestaurant,
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -638,7 +634,6 @@ export const RestaurantUpdateSocialLinks = async (req, res, next) => {
       data: existingRestaurant,
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

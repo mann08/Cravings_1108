@@ -17,17 +17,12 @@ const adminSeed = async () => {
     const existingAdmin = await User.findOne({ email: AdminUser.email });
 
     if (existingAdmin) {
-      console.log("Existing User Found");
-      console.log("Deleting Existing User");
       await existingAdmin.deleteOne();
     }
 
-    console.log("Creating New Admin");
 
     const newAdmin = await User.create(AdminUser);
-    console.log("Admin Create Sucessfully");
   } catch (error) {
-    console.log("Admin Not Created");
     throw error;
   }
 };

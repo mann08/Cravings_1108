@@ -23,7 +23,6 @@ export const ContactUsForm = async (req, res, next) => {
       message: "Contact form submitted successfully",
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -42,7 +41,6 @@ export const getPublicRestaurants = async (req, res, next) => {
       data: restaurants,
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

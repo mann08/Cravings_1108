@@ -114,7 +114,6 @@ export const getAdminDashboard = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -150,7 +149,6 @@ export const getAdminOrders = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -188,7 +186,6 @@ export const getAdminOrderById = async (req, res, next) => {
 
     res.status(200).json({ message: "Order fetched", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -240,7 +237,6 @@ export const updateOrderStatus = async (req, res, next) => {
     await order.save();
     res.status(200).json({ message: "Order status updated", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -278,7 +274,6 @@ export const assignRider = async (req, res, next) => {
 
     res.status(200).json({ message: "Rider assigned successfully", data: order });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -317,7 +312,6 @@ export const getCustomers = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -355,7 +349,6 @@ export const updateCustomerStatus = async (req, res, next) => {
 
     res.status(200).json({ message: "Customer status updated", data: customerDoc });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -393,7 +386,6 @@ export const getAdminRiders = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -426,7 +418,6 @@ export const updateRiderStatus = async (req, res, next) => {
 
     res.status(200).json({ message: "Rider status updated", data: riderDoc });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -456,7 +447,6 @@ export const getAdminRestaurants = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -486,7 +476,6 @@ export const updateAdminRestaurant = async (req, res, next) => {
 
     res.status(200).json({ message: "Restaurant updated", data: restaurant });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -529,7 +518,6 @@ export const getAdminFoods = async (req, res, next) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
@@ -584,7 +572,6 @@ export const getAdminReports = async (req, res, next) => {
       data: { dailyRevenue, topRestaurants, orderStatusBreakdown, newCustomers },
     });
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };

@@ -15,7 +15,6 @@ export const genToken = async (user, res) => {
       sameSite: "lax",
     });
 
-    console.log(token);
   } catch (error) {
     throw error;
   }
@@ -36,7 +35,6 @@ export const genOTPToken = async (user, res) => {
       sameSite: "lax",
     });
 
-    console.log(token);
   } catch (error) {
     throw error;
   }
