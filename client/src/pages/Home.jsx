@@ -119,10 +119,10 @@ function Home() {
             </Link>
 
             <Link
-              to="/login"
+              to="/#featured-restaurants"
               className="bg-[#fffdfa] hover:bg-white text-gray-900 font-bold px-8 py-3 rounded-lg shadow-md transition-colors duration-200"
             >
-              Order Now
+              Browse Restaurants
             </Link>
           </div>
 
@@ -160,8 +160,8 @@ function Home() {
         </div>
       </section>
 
-      {/* ── FEATURED RESTAURANTS SECTION ── */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
+      {/* ── FEATURED RESTAURANTS SECTION ───────────────────────────────────────────────────────── */}
+      <section id="featured-restaurants" className="py-16 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
             <span className="text-orange-600 font-bold uppercase tracking-wider text-xs block mb-1">
@@ -262,10 +262,10 @@ function Home() {
 
                   <div className="px-6 pb-6">
                     <Link
-                      to="/login"
+                      to={`/restaurants/${restaurant._id}/menu`}
                       className="w-full text-center block bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl transition-all duration-200 font-semibold shadow-md hover:shadow-orange-500/20"
                     >
-                      Explore Menu
+                      View Menu
                     </Link>
                   </div>
                 </div>

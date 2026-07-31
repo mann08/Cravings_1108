@@ -77,12 +77,31 @@ export const RestaurantGetData = async (req, res, next) => {
   }
 };
 
+const parseBoolean = (value) => value === true || value === "true";
+const parseJson = (value) => {
+  if (!value || typeof value !== "string") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
+
 export const RestaurantUpdateProfile = async (req, res, next) => {
   try {
     const currentUser = req.user;
-    const restaurantDataFromFE = req.body;
+    const restaurantDataFromFE = req.body.restaurantFormData
+      ? parseJson(req.body.restaurantFormData)
+      : req.body;
     const coverImageFromFE = req.files?.coverImage;
     const restaurantImageFromFE = req.files?.restaurantImage;
+
+    if (restaurantDataFromFE.cuisineTypes && typeof restaurantDataFromFE.cuisineTypes === "string") {
+      restaurantDataFromFE.cuisineTypes = restaurantDataFromFE.cuisineTypes
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
 
     const dataKeys = Object.keys(restaurantDataFromFE);
 
@@ -115,38 +134,38 @@ export const RestaurantUpdateProfile = async (req, res, next) => {
         message: "Restaurant profile created successfully",
         data: newRestaurant,
       });
-    } else {
-      if (coverImageFromFE) {
-        if (existingRestaurant.coverImage?.publicId) {
-          await deleteSingleImage(existingRestaurant.coverImage);
-        }
-        const coverImage = await uploadSingleImage(
-          coverImageFromFE[0],
-          `restaurant/${currentUser.phone}/coverPhoto`,
-        );
-        restaurantDataFromFE.coverImage = coverImage;
-      }
-      if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
-        if (existingRestaurant.restaurantImage?.length) {
-          await deleteMultipleImages(existingRestaurant.restaurantImage);
-        }
-        const restaurantImage = await uploadMultipleImages(
-          restaurantImageFromFE,
-          `restaurant/${currentUser.phone}/restaurantPhotos`,
-        );
-        restaurantDataFromFE.restaurantImage = restaurantImage;
-      }
-      dataKeys.forEach((key) => {
-        if (restaurantDataFromFE[key] !== undefined) {
-          existingRestaurant[key] = restaurantDataFromFE[key];
-        }
-      });
-      await existingRestaurant.save();
-      return res.status(200).json({
-        message: "Restaurant profile updated successfully",
-        data: existingRestaurant,
-      });
     }
+
+    if (coverImageFromFE) {
+      if (existingRestaurant.coverImage?.publicId) {
+        await deleteSingleImage(existingRestaurant.coverImage);
+      }
+      const coverImage = await uploadSingleImage(
+        coverImageFromFE[0],
+        `restaurant/${currentUser.phone}/coverPhoto`,
+      );
+      restaurantDataFromFE.coverImage = coverImage;
+    }
+    if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
+      if (existingRestaurant.restaurantImage?.length) {
+        await deleteMultipleImages(existingRestaurant.restaurantImage);
+      }
+      const restaurantImage = await uploadMultipleImages(
+        restaurantImageFromFE,
+        `restaurant/${currentUser.phone}/restaurantPhotos`,
+      );
+      restaurantDataFromFE.restaurantImage = restaurantImage;
+    }
+    dataKeys.forEach((key) => {
+      if (restaurantDataFromFE[key] !== undefined) {
+        existingRestaurant[key] = restaurantDataFromFE[key];
+      }
+    });
+    await existingRestaurant.save();
+    return res.status(200).json({
+      message: "Restaurant profile updated successfully",
+      data: existingRestaurant,
+    });
   } catch (error) {
     next(error);
   }
@@ -347,7 +366,7 @@ export const addRestaurantMenuItem = async (req, res, next) => {
       return next(error);
     }
 
-    const { itemName, description, price, category, isRecommended, isTopRated, isNew } = req.body;
+    const { itemName, description, price, category, type, status, isRecommended, isTopRated, isNew } = req.body;
     if (!itemName || !description || !price || !category) {
       const error = new Error("All menu fields are required");
       error.statusCode = 400;
@@ -359,14 +378,26 @@ export const addRestaurantMenuItem = async (req, res, next) => {
       menu = await Menu.create({ restaurantId: restaurant._id, menuItems: [] });
     }
 
-    const photoURL = `https://placehold.co/600x400/F97316/ffffff?text=${encodeURIComponent(itemName)}`;
-    const image = { url: photoURL, publicId: null };
+    let image = {
+      url: `https://placehold.co/600x400/F97316/ffffff?text=${encodeURIComponent(itemName)}`,
+      publicId: null,
+    };
+
+    if (req.file) {
+      const uploadedImage = await uploadSingleImage(
+        req.file,
+        `restaurant/${req.user.phone}/menuItems`,
+      );
+      image = uploadedImage;
+    }
 
     menu.menuItems.push({
       itemName,
       description,
       price: parseFloat(price),
       category,
+      type: type || "Vegetarian",
+      status: status || "available",
       image,
       isAvailable: true,
       isRecommended: !!isRecommended,
@@ -375,7 +406,8 @@ export const addRestaurantMenuItem = async (req, res, next) => {
     });
 
     await menu.save();
-    res.status(201).json({ message: "Menu item added successfully", data: menu.menuItems });
+    const createdItem = menu.menuItems[menu.menuItems.length - 1];
+    res.status(201).json({ message: "Menu item added successfully", data: createdItem });
   } catch (error) {
     next(error);
   }
@@ -412,17 +444,30 @@ export const updateRestaurantMenuItem = async (req, res, next) => {
       return next(error);
     }
 
-    const { itemName, description, price, category, isRecommended, isTopRated, isNew } = req.body;
+    const { itemName, description, price, category, type, status, isRecommended, isTopRated, isNew } = req.body;
     if (itemName) item.itemName = itemName;
     if (description) item.description = description;
-    if (price) item.price = parseFloat(price);
+    if (price !== undefined) item.price = parseFloat(price);
     if (category) item.category = category;
+    if (type) item.type = type;
+    if (status) item.status = status;
     if (isRecommended !== undefined) item.isRecommended = !!isRecommended;
     if (isTopRated !== undefined) item.isTopRated = !!isTopRated;
     if (isNew !== undefined) item.isNew = !!isNew;
 
+    if (req.file) {
+      if (item.image?.publicId) {
+        await deleteSingleImage(item.image);
+      }
+      const uploadedImage = await uploadSingleImage(
+        req.file,
+        `restaurant/${req.user.phone}/menuItems`,
+      );
+      item.image = uploadedImage;
+    }
+
     await menu.save();
-    res.status(200).json({ message: "Menu item updated successfully", data: menu.menuItems });
+    res.status(200).json({ message: "Menu item updated successfully", data: item });
   } catch (error) {
     next(error);
   }

@@ -8,20 +8,17 @@ const RestaurantSchema = mongoose.Schema(
       required: true,
     },
     restaurantName: { type: String, required: true },
-    address: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    pinCode: { type: String, required: true },
-    country: { type: String, required: true },
+    address: { type: String },
+    city: { type: String },
+    state: { type: String },
+    pinCode: { type: String },
+    country: { type: String },
     geoLocation: {
       type: {
-        lat: {
-          type: String,
-        },
-        lon: {
-          type: String,
-        },
+        lat: { type: String },
+        lon: { type: String },
       },
+      default: {},
     },
 
     documents: {
@@ -32,25 +29,29 @@ const RestaurantSchema = mongoose.Schema(
         fssaiCertificate: { type: String },
         panCard: { type: String },
       },
+      default: {},
     },
     financialDetails: {
       type: {
-        bankName: { type: String, required: true },
-        accountNumber: { type: String, required: true },
-        ifscCode: { type: String, required: true },
+        bankName: { type: String },
+        accountNumber: { type: String },
+        ifscCode: { type: String },
       },
+      default: {},
     },
     contactDetails: {
       type: {
-        email: { type: String, required: true },
-        phone: { type: String, required: true },
+        email: { type: String },
+        phone: { type: String },
       },
+      default: {},
     },
     servingHours: {
       type: {
-        openingTime: { type: String, required: true },
-        closingTime: { type: String, required: true },
+        openingTime: { type: String },
+        closingTime: { type: String },
       },
+      default: {},
     },
     isOpen: { type: Boolean, default: false },
     status: {
@@ -61,7 +62,7 @@ const RestaurantSchema = mongoose.Schema(
     averageRating: { type: Number, default: 0 },
     cuisineTypes: {
       type: [String],
-      required: true,
+      default: [],
     },
     restaurantImage: {
       type: [
@@ -70,20 +71,19 @@ const RestaurantSchema = mongoose.Schema(
           publicId: { type: String, required: true },
         },
       ],
-      required: true,
+      default: [],
     },
     coverImage: {
       type: {
         url: { type: String, required: true },
         publicId: { type: String, required: true },
       },
-      required: true,
     },
-    description: { type: String, required: true },
+    description: { type: String },
     restaurantType: {
       type: String,
       enum: ["veg", "non-veg", "jain", "vegan", "both"],
-      required: true,
+      default: "both",
     },
     socialMediaLinks: {
       type: [

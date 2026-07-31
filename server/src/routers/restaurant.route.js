@@ -53,8 +53,8 @@ router.get("/orders", RestaurantAuthProtect, getRestaurantOrders);
 router.patch("/orders/:orderId/status", RestaurantAuthProtect, updateRestaurantOrderStatus);
 
 router.get("/menu", RestaurantAuthProtect, getRestaurantMenu);
-router.post("/menu", RestaurantAuthProtect, addRestaurantMenuItem);
-router.put("/menu/:itemId", RestaurantAuthProtect, updateRestaurantMenuItem);
+router.post("/menu", RestaurantAuthProtect, upload.single("image"), addRestaurantMenuItem);
+router.put("/menu/:itemId", RestaurantAuthProtect, upload.single("image"), updateRestaurantMenuItem);
 router.delete("/menu/:itemId", RestaurantAuthProtect, deleteRestaurantMenuItem);
 router.patch("/menu/:itemId/toggle", RestaurantAuthProtect, toggleMenuItemAvailability);
 

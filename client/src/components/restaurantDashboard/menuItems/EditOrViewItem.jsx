@@ -17,6 +17,7 @@ const labelCls =
 const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
   const [form, setForm] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileRef = useRef();
 
@@ -25,6 +26,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     if (item) {
       setForm({ ...item });
       setPreview(item.image?.url || null);
+      setImageFile(null);
     }
   }, [item]);
 
@@ -44,10 +46,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     const file = e.target.files[0];
     if (!file) return;
     const objectUrl = URL.createObjectURL(file);
-    setForm((prev) => ({
-      ...prev,
-      image: { url: objectUrl, publicId: prev.image?.publicId || `item-${Date.now()}` },
-    }));
+    setImageFile(file);
     setPreview(objectUrl);
   };
 
@@ -64,23 +63,28 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
 
     setIsLoading(true);
     try {
-      const payload = {
-        itemName: form.itemName.trim(),
-        description: form.description?.trim() || "",
-        price: parseFloat(form.price),
-        category: form.category,
-        type: form.type,
-        status: form.status,
-        isTopRated: form.isTopRated,
-        isRecommended: form.isRecommended,
-        isNew: form.isNew,
-      };
+      const formData = new FormData();
+      formData.append("itemName", form.itemName.trim());
+      formData.append("description", form.description?.trim() || "");
+      formData.append("price", parseFloat(form.price));
+      formData.append("category", form.category);
+      formData.append("type", form.type);
+      formData.append("status", form.status);
+      formData.append("isTopRated", form.isTopRated);
+      formData.append("isRecommended", form.isRecommended);
+      formData.append("isNew", form.isNew);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
 
-      const res = await api.put(`/restaurant/menu/${form._id}`, payload);
+      const res = await api.put(`/restaurant/menu/${form._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast.success("Menu item updated successfully!");
       if (onSave) {
         onSave(res.data.data);
       }
+      setImageFile(null);
       handleClose();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update item. Please try again.");

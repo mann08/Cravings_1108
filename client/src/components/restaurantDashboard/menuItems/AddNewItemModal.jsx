@@ -14,7 +14,6 @@ const defaultForm = {
   isTopRated: false,
   isRecommended: false,
   isNew: false,
-  image: null,
 };
 
 const CATEGORIES = [
@@ -34,6 +33,7 @@ const CATEGORIES = [
 const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
   const [form, setForm] = useState(defaultForm);
   const [preview, setPreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileRef = useRef();
 
@@ -50,13 +50,14 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setForm((prev) => ({ ...prev, image: file }));
+    setImageFile(file);
     setPreview(URL.createObjectURL(file));
   };
 
   const handleClose = () => {
     setForm(defaultForm);
     setPreview(null);
+    setImageFile(null);
     onClose();
   };
 
@@ -69,19 +70,23 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
 
     setIsLoading(true);
     try {
-      const payload = {
-        itemName: form.itemName.trim(),
-        description: form.description.trim(),
-        price: parseFloat(form.price),
-        category: form.category,
-        type: form.type,
-        status: form.status,
-        isTopRated: form.isTopRated,
-        isRecommended: form.isRecommended,
-        isNew: form.isNew,
-      };
+      const formData = new FormData();
+      formData.append("itemName", form.itemName.trim());
+      formData.append("description", form.description.trim());
+      formData.append("price", parseFloat(form.price));
+      formData.append("category", form.category);
+      formData.append("type", form.type);
+      formData.append("status", form.status);
+      formData.append("isTopRated", form.isTopRated);
+      formData.append("isRecommended", form.isRecommended);
+      formData.append("isNew", form.isNew);
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
 
-      const res = await api.post("/restaurant/menu", payload);
+      const res = await api.post("/restaurant/menu", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast.success("Menu item added successfully!");
       if (onAdd) {
         onAdd(res.data.data);

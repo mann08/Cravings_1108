@@ -1,54 +1,74 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
+import api from "../../../config/api.config.js";
+import toast from "react-hot-toast";
 
 const RestaurantPhotos = () => {
   const MAX_FILE_SIZE = 1024 * 1024; // 1MB
   const MAX_GALLERY_IMAGES = 8;
 
-  const [coverImage, setCoverImage] = useState(null);
-  const [galleryImages, setGalleryImages] = useState([]);
+  const [restaurantData, setRestaurantData] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [coverImageFile, setCoverImageFile] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [errors, setErrors] = useState({ cover: "", gallery: "" });
 
   const coverPreview = useMemo(() => {
-    return coverImage ? URL.createObjectURL(coverImage) : "";
-  }, [coverImage]);
+    if (coverImageFile) {
+      return URL.createObjectURL(coverImageFile);
+    }
+    return restaurantData?.coverImage?.url || "";
+  }, [coverImageFile, restaurantData]);
 
-  const galleryPreviews = useMemo(() => {
-    return galleryImages.map((image) => ({
-      file: image,
-      url: URL.createObjectURL(image),
-      key: `${image.name}-${image.lastModified}`,
+  const restaurantImagePreviews = useMemo(() => {
+    const uploadPreviews = galleryFiles.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+      existing: false,
+      key: `${file.name}-${file.lastModified}`,
     }));
-  }, [galleryImages]);
+    const existing = (restaurantData?.restaurantImage || []).map((image) => ({
+      url: image.url,
+      existing: true,
+      key: image.publicId || image.url,
+    }));
+    return [...existing, ...uploadPreviews];
+  }, [galleryFiles, restaurantData]);
 
   useEffect(() => {
-    return () => {
-      if (coverPreview) {
-        URL.revokeObjectURL(coverPreview);
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/restaurant/get-data");
+        setRestaurantData(res.data.data?.[0] || null);
+      } catch (error) {
+        toast.error("Failed to load restaurant images.");
       }
     };
-  }, [coverPreview]);
+    fetchData();
+  }, []);
 
   useEffect(() => {
     return () => {
-      galleryPreviews.forEach((imagePreview) => {
-        URL.revokeObjectURL(imagePreview.url);
+      restaurantImagePreviews.forEach((preview) => {
+        if (!preview.existing) {
+          URL.revokeObjectURL(preview.url);
+        }
       });
     };
-  }, [galleryPreviews]);
+  }, [restaurantImagePreviews]);
 
   const handleCoverImageChange = (event) => {
     const file = event.target.files?.[0];
 
     if (!file) {
-      setCoverImage(null);
+      setCoverImageFile(null);
       setErrors((prev) => ({ ...prev, cover: "" }));
       return;
     }
 
     if (file.size >= MAX_FILE_SIZE) {
-      setCoverImage(null);
+      setCoverImageFile(null);
       setErrors((prev) => ({
         ...prev,
         cover: "Cover image must be less than 1MB.",
@@ -57,7 +77,7 @@ const RestaurantPhotos = () => {
       return;
     }
 
-    setCoverImage(file);
+    setCoverImageFile(file);
     setErrors((prev) => ({ ...prev, cover: "" }));
   };
 
@@ -78,7 +98,7 @@ const RestaurantPhotos = () => {
       return;
     }
 
-    setGalleryImages((prevImages) => {
+    setGalleryFiles((prevImages) => {
       const merged = [...prevImages, ...files];
       if (merged.length > MAX_GALLERY_IMAGES) {
         setErrors((prev) => ({
@@ -96,10 +116,46 @@ const RestaurantPhotos = () => {
   };
 
   const removeGalleryImage = (indexToRemove) => {
-    setGalleryImages((prevImages) =>
+    setGalleryFiles((prevImages) =>
       prevImages.filter((_, index) => index !== indexToRemove),
     );
     setErrors((prev) => ({ ...prev, gallery: "" }));
+  };
+
+  const handleSavePhotos = async () => {
+    if (!coverImageFile && galleryFiles.length === 0) {
+      toast.error("Please select a cover image or restaurant images to save.");
+      return;
+    }
+
+    const formData = new FormData();
+    if (coverImageFile) {
+      formData.append("coverImage", coverImageFile);
+    }
+    galleryFiles.forEach((file) => {
+      formData.append("restaurantImage", file);
+    });
+
+    setSaving(true);
+    try {
+      const res = await api.put("/restaurant/update-profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success(res.data.message || "Restaurant photos saved successfully!");
+      setRestaurantData(res.data.data);
+      setCoverImageFile(null);
+      setGalleryFiles([]);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to save restaurant photos.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    setCoverImageFile(null);
+    setGalleryFiles([]);
+    setErrors({ cover: "", gallery: "" });
   };
 
   return (
@@ -146,7 +202,7 @@ const RestaurantPhotos = () => {
               )}
             </div>
 
-            {coverImage && coverPreview ? (
+            {coverPreview ? (
               <div className="overflow-hidden rounded-xl border border-(--color-secondary) bg-white shadow-sm">
                 <div className="relative">
                   <img
@@ -157,10 +213,14 @@ const RestaurantPhotos = () => {
                   <div className="absolute inset-0 bg-linear-to-t from-black/35 via-transparent to-transparent" />
                 </div>
                 <div className="flex items-center justify-between gap-2 px-3 py-2 text-xs">
-                  <p className="truncate font-medium">{coverImage.name}</p>
-                  <span className="shrink-0 rounded-full bg-(--color-secondary)/20 px-2 py-1 text-[11px]">
-                    {(coverImage.size / 1024).toFixed(1)} KB
-                  </span>
+                  <p className="truncate font-medium">
+                    {coverImageFile?.name || "Current cover image"}
+                  </p>
+                  {coverImageFile && (
+                    <span className="shrink-0 rounded-full bg-(--color-secondary)/20 px-2 py-1 text-[11px]">
+                      {(coverImageFile.size / 1024).toFixed(1)} KB
+                    </span>
+                  )}
                 </div>
               </div>
             ) : (
@@ -187,7 +247,7 @@ const RestaurantPhotos = () => {
                   Other Restaurant Images
                 </h3>
                 <span className="text-[11px] px-2 py-1 rounded-full bg-(--color-primary)/10 text-(--color-primary) font-medium">
-                  {galleryImages.length}/{MAX_GALLERY_IMAGES}
+                  {galleryFiles.length}/{MAX_GALLERY_IMAGES}
                 </span>
               </div>
               <p className="text-xs text-(--color-secondary-content) mt-0.5">
@@ -221,9 +281,9 @@ const RestaurantPhotos = () => {
             </div>
           )}
 
-          {galleryPreviews.length > 0 ? (
+          {restaurantImagePreviews.length > 0 ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {galleryPreviews.map((imagePreview, index) => (
+              {restaurantImagePreviews.map((imagePreview, index) => (
                 <div
                   key={imagePreview.key}
                   className="group overflow-hidden rounded-xl border border-(--color-secondary) bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
@@ -234,23 +294,27 @@ const RestaurantPhotos = () => {
                       alt={`Restaurant ${index + 1}`}
                       className="h-36 w-full object-cover"
                     />
-                    <button
-                      type="button"
-                      onClick={() => removeGalleryImage(index)}
-                      className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-(--color-error) shadow-sm ring-1 ring-(--color-error)/20 transition hover:bg-(--color-error) hover:text-(--color-error-content)"
-                      aria-label={`Remove ${imagePreview.file.name}`}
-                    >
-                      <IoMdClose className="text-lg" />
-                    </button>
+                    {!imagePreview.existing && (
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(index - (restaurantData?.restaurantImage?.length || 0))}
+                        className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-(--color-error) shadow-sm ring-1 ring-(--color-error)/20 transition hover:bg-(--color-error) hover:text-(--color-error-content)"
+                        aria-label={`Remove ${imagePreview.file.name}`}
+                      >
+                        <IoMdClose className="text-lg" />
+                      </button>
+                    )}
                   </div>
 
                   <div className="px-3 py-2">
                     <p className="truncate text-xs font-medium text-(--color-primary)">
-                      {imagePreview.file.name}
+                      {imagePreview.existing ? "Existing photo" : imagePreview.file.name}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-(--color-secondary-content)">
-                      {(imagePreview.file.size / 1024).toFixed(1)} KB
-                    </p>
+                    {!imagePreview.existing && (
+                      <p className="mt-0.5 text-[11px] text-(--color-secondary-content)">
+                        {(imagePreview.file.size / 1024).toFixed(1)} KB
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
