@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaStar, FaMapMarkerAlt, FaUtensils } from "react-icons/fa";
 import { LuLoaderCircle } from "react-icons/lu";
 import api from "../config/api.config";
 
-import bg1 from "../assets/carousel/bgImage1-BgVBBcls.jpg";
-import bg2 from "../assets/carousel/bgImage2-CSvQeVNX.jpg";
-import bg3 from "../assets/carousel/bgImage3-BTY6Sz_K.jpg";
-import bg4 from "../assets/carousel/bgImage4-L1QELaMd.jpg";
+import bg1 from "../images/bgImage1-BgVBBcls.jpg";
+import bg2 from "../images/bgImage2-CSvQeVNX.jpg";
+import bg3 from "../images/bgImage3-BTY6Sz_K.jpg";
+import bg4 from "../images/bgImage4-L1QELaMd.jpg";
 
 const carouselImages = [bg1, bg2, bg3, bg4];
 
@@ -119,10 +119,10 @@ function Home() {
             </Link>
 
             <Link
-              to="/#featured-restaurants"
+              to="/order-now"
               className="bg-[#fffdfa] hover:bg-white text-gray-900 font-bold px-8 py-3 rounded-lg shadow-md transition-colors duration-200"
             >
-              Browse Restaurants
+              Order Now
             </Link>
           </div>
 
@@ -262,7 +262,7 @@ function Home() {
 
                   <div className="px-6 pb-6">
                     <Link
-                      to={`/restaurants/${restaurant._id}/menu`}
+                      to={`/restaurant-details/${restaurant._id}`}
                       className="w-full text-center block bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl transition-all duration-200 font-semibold shadow-md hover:shadow-orange-500/20"
                     >
                       View Menu

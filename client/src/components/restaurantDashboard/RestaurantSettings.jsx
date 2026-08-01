@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import RestaurantInformation from "./settings/RestaurantInformation";
 import RestaurantCoreDetails from "./settings/RestaurantCoreDetails";
 import RestaurantPhotos from "./settings/RestaurantPhotos";
-import api from "../../config/api.config.js";
+import api from "../../config/api.config";
 import toast from "react-hot-toast";
 
 const RestaurantSetting = () => {

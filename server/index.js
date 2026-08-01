@@ -4,7 +4,7 @@ dotenv.config();
 import cloudinary from "./src/config/cloudinary.config.js";
 import express from "express";
 
-import connectDB from "./src/config/dbConnecton.config.js";
+import connectDB from "./src/config/dbConnection.config.js";
 import AuthRouter from "./src/routers/auth.route.js";
 import PublicRouter from "./src/routers/public.route.js";
 import CommonRouter from "./src/routers/common.route.js";

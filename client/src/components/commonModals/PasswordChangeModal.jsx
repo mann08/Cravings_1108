@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle } from "react-icons/lu";
-import api from "../../config/api.config.js";
+import api from "../../config/api.config";
 import toast from "react-hot-toast";
 
 const PasswordChangeModal = ({ open, onClose }) => {

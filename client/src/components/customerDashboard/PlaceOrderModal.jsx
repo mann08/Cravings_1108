@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import api from "../../config/api.config.js";
+﻿import React, { useEffect, useState } from "react";
+import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../dashboard/shared/LoadingSpinner";
 import { FaStore, FaTimes, FaShoppingCart, FaPlus, FaMinus, FaTrash, FaMapMarkerAlt, FaSearch } from "react-icons/fa";

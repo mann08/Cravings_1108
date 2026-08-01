@@ -2,43 +2,53 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-300">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid gap-8 md:grid-cols-3">
-        <div className="space-y-4">
-          <p className="text-2xl font-bold text-white">Cravings</p>
-          <p className="text-sm leading-7 text-slate-400 max-w-md">
-            Delivering quality meals from the best restaurants in your city. Browse menus freely and login when you're ready to order.
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        {/* Brand */}
+        <div>
+          <p className="text-2xl font-extrabold text-white mb-3">🍽️ Cravings</p>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Fast, reliable food delivery for your everyday cravings. Fresh meals from the best local restaurants, delivered to your doorstep.
           </p>
         </div>
 
+        {/* Quick Links */}
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-slate-500 font-semibold mb-4">Quick links</p>
-          <div className="flex flex-col gap-3 text-sm text-slate-300">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link to="/contact" className="hover:text-white transition-colors">
-              Contact
-            </Link>
-            <Link to="/login" className="hover:text-white transition-colors">
-              Login
-            </Link>
-            <Link to="/register" className="hover:text-white transition-colors">
-              Register
-            </Link>
-          </div>
+          <p className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</p>
+          <ul className="space-y-2 text-sm">
+            <li><Link to="/" className="hover:text-orange-400 transition-colors">Home</Link></li>
+            <li><Link to="/contact" className="hover:text-orange-400 transition-colors">Contact Us</Link></li>
+            <li><Link to="/login" className="hover:text-orange-400 transition-colors">Login</Link></li>
+            <li><Link to="/register" className="hover:text-orange-400 transition-colors">Register</Link></li>
+          </ul>
         </div>
 
+        {/* For Partners */}
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-slate-500 font-semibold mb-4">Contact</p>
-          <p className="text-sm text-slate-300">support@cravings.com</p>
-          <p className="text-sm text-slate-300 mt-2">+91 12345 67890</p>
-          <p className="text-sm text-slate-500 mt-4">Open hours: Mon - Sun, 8am - 10pm</p>
+          <p className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">For Partners</p>
+          <ul className="space-y-2 text-sm">
+            <li><Link to="/register" className="hover:text-orange-400 transition-colors">Restaurant Partner</Link></li>
+            <li><Link to="/register" className="hover:text-orange-400 transition-colors">Become a Rider</Link></li>
+            <li><Link to="/contact" className="hover:text-orange-400 transition-colors">Support</Link></li>
+          </ul>
+        </div>
+
+        {/* Contact Info */}
+        <div>
+          <p className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Get in Touch</p>
+          <ul className="space-y-2 text-sm text-gray-400">
+            <li>📧 support@cravings.in</li>
+            <li>📞 +91 98765 43210</li>
+            <li>📍 India</li>
+          </ul>
         </div>
       </div>
 
-      <div className="border-t border-slate-800 py-6 text-center text-sm text-slate-500">
-        © 2026 Cravings. All rights reserved.
+      <div className="border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-500">
+          <p>© 2026 Cravings. All rights reserved.</p>
+          <p className="text-xs">Made with ❤️ for food lovers</p>
+        </div>
       </div>
     </footer>
   );
