@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaStar, FaMapMarkerAlt, FaUtensils } from "react-icons/fa";
 import { LuLoaderCircle } from "react-icons/lu";
@@ -32,7 +32,7 @@ function Home() {
       try {
         const res = await api.get("/public/restaurants");
         setRestaurants(res.data.data || []);
-      } catch (error) {
+      } catch {
         try {
           const fallbackRes = await api.get("/customer/restaurants");
           setRestaurants(fallbackRes.data.data || []);

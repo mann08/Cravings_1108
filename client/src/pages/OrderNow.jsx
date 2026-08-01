@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
@@ -14,7 +14,7 @@ import {
   IoStorefrontOutline,
   IoCheckmarkCircleOutline,
 } from "react-icons/io5";
-import { FaLeaf, FaDrumstickBite, FaUtensils } from "react-icons/fa";
+import { FaLeaf, FaDrumstickBite } from "react-icons/fa";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { TbToolsKitchen2 } from "react-icons/tb";
 
@@ -42,14 +42,6 @@ const RESTAURANT_TYPES = [
     icon: <MdOutlineRestaurantMenu className="text-purple-500" />,
   },
 ];
-
-const typeStyles = {
-  veg: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  "non-veg": "bg-red-50 text-red-700 border-red-200",
-  vegan: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  jain: "bg-amber-50 text-amber-700 border-amber-200",
-  both: "bg-violet-50 text-violet-700 border-violet-200",
-};
 
 const OrderNow = () => {
   const navigate = useNavigate();

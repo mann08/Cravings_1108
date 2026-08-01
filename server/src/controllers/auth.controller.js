@@ -131,7 +131,7 @@ export const SendOtp = async (req, res, next) => {
       await existingOTP.deleteOne();
     }
 
-    const saveOTP = await OTP.create({
+    await OTP.create({
       email,
       otp: hashedOTP,
     });

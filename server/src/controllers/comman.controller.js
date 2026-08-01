@@ -61,15 +61,7 @@ export const UpdateUserPassword = async (req, res, next) => {
       return next(error);
     }
 
-    // User Already Verified By Auth Protect Middleware
-    // const existingUser = await User.findOne({ email });
-    // if (!existingUser) {
-    //   const error = new Error("Email not registred");
-    //   error.statusCode = 404;
-    //   return next(error);
-    // }
-
-    // we can use req.user to get the current user since the user is already verified by the auth protect middleware
+    // User is already verified by AuthProtect middleware
     const currentUser = req.user;
 
     const isPasswordMatch = await bcrypt.compare(

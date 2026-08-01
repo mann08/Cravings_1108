@@ -1,11 +1,11 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdOutlineLockReset } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto } from "react-icons/md";
-import PasswordChangeModal from "../commonModals/PasswodChangeModal.jsx";
+import PasswordChangeModal from "../commonModals/PasswordChangeModal.jsx";
 
 const AdminSetting = () => {
   const { user, setUser } = useAuth();
