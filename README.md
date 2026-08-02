@@ -109,3 +109,13 @@ The project contains 76 REST APIs categorized into seven modules.
 Each API includes:
 
 Endpoint HTTP Method Authentication Requirement Request Body Response Format Success Status Codes Error Responses.
+
+# 👨‍💻 Author
+
+**Mann Verma**
+
+Computer Science Engineering Student
+
+Jai Narain College of Technology, Bhopal
+
+MERN Stack Developer
