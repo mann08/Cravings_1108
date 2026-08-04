@@ -84,6 +84,7 @@ src/
 - Login Page
 - Register Page
 - Restaurant Listing
+- Contact Us Page 
 
 ---
 🔐 Authentication
