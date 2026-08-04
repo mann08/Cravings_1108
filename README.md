@@ -1,4 +1,4 @@
-This is Craving app 
+Craving app 
 
 Using MERN Stack 
 
