@@ -39,8 +39,9 @@ src/
 │   ├── Home.jsx
 │   ├── Login.jsx
 │   ├── Register.jsx
-│   └── FoodTable.jsx
-│
+│   ├── FoodTable.jsx
+│   ├── ContactUs.jsx
+
 ├── images/
 │   ├── bgImage1.jpg
 │   ├── undermango tree.avif
