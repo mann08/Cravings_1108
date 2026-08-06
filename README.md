@@ -128,7 +128,7 @@ Endpoint HTTP Method Authentication Requirement Request Body Response Format Suc
   
 # 👨‍💻 Author
 
-**Mann Verma**
+***Mann Verma***
 
 Computer Science Engineering Student
 
