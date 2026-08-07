@@ -1,4 +1,4 @@
-This is Craving app 
+Craving app 
 
 Using MERN Stack 
 
@@ -39,8 +39,9 @@ src/
 │   ├── Home.jsx
 │   ├── Login.jsx
 │   ├── Register.jsx
-│   └── FoodTable.jsx
-│
+│   ├── FoodTable.jsx
+│   ├── ContactUs.jsx
+
 ├── images/
 │   ├── bgImage1.jpg
 │   ├── undermango tree.avif
@@ -84,6 +85,7 @@ src/
 - Login Page
 - Register Page
 - Restaurant Listing
+- Contact Us Page 
 
 ---
 🔐 Authentication
@@ -109,3 +111,27 @@ The project contains 76 REST APIs categorized into seven modules.
 Each API includes:
 
 Endpoint HTTP Method Authentication Requirement Request Body Response Format Success Status Codes Error Responses.
+
+# 📈 Project Highlights
+
+- MERN Stack Architecture
+- JWT Cookie Authentication
+- Role-Based Authorization
+- Responsive UI
+- RESTful APIs
+- MongoDB Database
+- Secure Password Encryption
+- Modular Backend Architecture
+- Clean React Components
+- Tailwind CSS UI
+
+  
+# 👨‍💻 Author
+
+***Mann Verma***
+
+Computer Science Engineering Student
+
+Jai Narain College of Technology, Bhopal
+
+MERN Stack Developer
