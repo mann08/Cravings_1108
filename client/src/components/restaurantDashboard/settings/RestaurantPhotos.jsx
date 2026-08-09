@@ -258,7 +258,7 @@ const RestaurantPhotos = () => {
             <div className="shrink-0">
               <label
                 htmlFor="galleryImages"
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs shadow-sm transition ${galleryImages.length >= MAX_GALLERY_IMAGES ? "bg-(--color-secondary) text-(--color-secondary-content) cursor-not-allowed" : "bg-(--color-primary) text-(--color-primary-content) cursor-pointer hover:opacity-95"}`}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs shadow-sm transition ${galleryFiles.length >= MAX_GALLERY_IMAGES ? "bg-(--color-secondary) text-(--color-secondary-content) cursor-not-allowed" : "bg-(--color-primary) text-(--color-primary-content) cursor-pointer hover:opacity-95"}`}
               >
                 <MdOutlineAddAPhoto className="text-sm" />
                 Upload Restaurant Images
@@ -269,7 +269,7 @@ const RestaurantPhotos = () => {
                 accept="image/*"
                 multiple
                 onChange={handleGalleryImagesChange}
-                disabled={galleryImages.length >= MAX_GALLERY_IMAGES}
+                disabled={galleryFiles.length >= MAX_GALLERY_IMAGES}
                 className="hidden"
               />
             </div>
