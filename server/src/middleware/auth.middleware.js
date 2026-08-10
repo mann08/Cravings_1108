@@ -10,14 +10,12 @@ export const AuthProtect = async (req, res, next) => {
       return next(error);
     }
 
-
     const decode = await jwt.verify(token, process.env.JWT_SECRET);
     if (!decode) {
       const error = new Error("Session Expired");
       error.statusCode = 401;
       return next(error);
     }
-
 
     const verifiedUser = await User.findById(decode.id);
     if (!verifiedUser) {
