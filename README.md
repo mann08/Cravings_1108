@@ -2,6 +2,26 @@ Craving app
 
 Using MERN Stack 
 
+
+
+# 📌 Table of Contents
+
+- Introduction
+- Features
+- User Roles
+- Tech Stack
+- Project Architecture
+- Folder Structure
+- Authentication
+- API Modules
+- Installation
+- Environment Variables
+- Running the Project
+- Future Enhancements
+- Screenshots
+- Author
+
+  
 # 🚀 Introduction
 
 Cravings is designed to provide a complete online food ordering ecosystem.
