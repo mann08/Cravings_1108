@@ -14,11 +14,9 @@ Using MERN Stack
 - Folder Structure
 - Authentication
 - API Modules
-- Installation
 - Environment Variables
 - Running the Project
 - Future Enhancements
-- Screenshots
 - Author
 
   
