@@ -19,7 +19,6 @@ Using MERN Stack
 - Future Enhancements
 - Author
 
-  
 # 🚀 Introduction
 
 Cravings is designed to provide a complete online food ordering ecosystem.
