@@ -1,4 +1,4 @@
-Craving app 
+Craving App 
 
 Using MERN Stack 
 
