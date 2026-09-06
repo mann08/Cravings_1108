@@ -1,7 +1,16 @@
-Craving App 
+# Craving App
 
-Using MERN Stack 
+# 🚀 Introduction
 
+Cravings is designed to provide a complete online food ordering ecosystem.
+
+Customers can browse restaurants, search dishes, place orders, and track deliveries.
+
+Restaurant owners can manage menus, orders, and earnings.
+
+Riders receive assigned deliveries and update delivery status.
+
+Admins control the entire platform through analytics and management tools.
 
 
 # 📌 Table of Contents
@@ -19,17 +28,6 @@ Using MERN Stack
 - Future Enhancements
 - Author
 
-# 🚀 Introduction
-
-Cravings is designed to provide a complete online food ordering ecosystem.
-
-Customers can browse restaurants, search dishes, place orders, and track deliveries.
-
-Restaurant owners can manage menus, orders, and earnings.
-
-Riders receive assigned deliveries and update delivery status.
-
-Admins control the entire platform through analytics and management tools.
 
 ## 🚀 Features
 
