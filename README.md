@@ -29,7 +29,7 @@ Admins control the entire platform through analytics and management tools.
 - Author
 
 
-## 🚀 Features
+# 🚀 Features
 
 - 🏠 Beautiful and responsive Home Page
 - 🔐 User Authentication (Login & Register)
