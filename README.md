@@ -42,7 +42,7 @@ Admins control the entire platform through analytics and management tools.
 - 🎨 Modern UI using Tailwind CSS
 - ⚡ Fast Navigation using React Router
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
 - **Frontend:** React.js
 - **Styling:** Tailwind CSS
