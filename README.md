@@ -94,7 +94,7 @@ src/
 - Customer Reviews
 - Statistics
 - Restaurant Partner Section
-
+p
 ### 🔑 Login
 - User Login Form
 - Responsive Design
@@ -117,7 +117,8 @@ src/
 - Contact Us Page 
 
 ---
-🔐 Authentication
+
+ # 🔐 Authentication
 
 The project uses Cookie-based JWT Authentication.
 
